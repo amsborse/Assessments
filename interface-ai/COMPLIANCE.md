@@ -91,7 +91,7 @@ evidence for both runs" — **met**, end to end in [evidence/index.html](evidenc
 | --- | --- | --- |
 | Public git repo | met | github.com/amsborse/Assessments — this assessment lives in `interface-ai/` (the repo holds several assessments; submit the folder URL) |
 | `/README.md`: setup, keys/config, run without live services, demo commands | met | [README.md](README.md) |
-| `/REPORT.md`, ~1–3 pages, the seven headings | met | [REPORT.md](REPORT.md) (~1,600 words incl. tables, headings verbatim) |
+| `/REPORT.md`, ~1–3 pages, the seven headings | met | [REPORT.md](REPORT.md) (~1,700 words incl. tables, headings verbatim) |
 | `/evidence/`: artifact + discovery log + replay log; ideally an error replay; recording welcome | met | runs 01–18, [capability.json](evidence/capability.json), [demo.mp4](evidence/demo.mp4) |
 
 ## §8 Optional stretch goals — "pick at most one or two, depth over breadth"
