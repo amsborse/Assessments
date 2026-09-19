@@ -248,8 +248,12 @@ async def _beyond(
 async def main(decider_kind: str) -> int:
     work = REPO / "data" / "evidence-work"
     shutil.rmtree(work, ignore_errors=True)
+    # A throwaway copy of the catalog: discoveries, approvals and overlays made here must not
+    # add versions to the reviewed catalog in git.
+    shutil.copytree(REPO / "catalog", work / "catalog")
     settings = get_settings().model_copy(
         update={
+            "catalog_dir": work / "catalog",
             "data_dir": work / "data",
             "allowed_hosts": ["127.0.0.1", "localhost"],
             "handoff_timeout_s": 90,
@@ -286,7 +290,7 @@ async def main(decider_kind: str) -> int:
                     "reason": found.reason,
                     "model": decider.model_name,
                     "steps": len(found.steps),
-                    "artifact": saved.as_posix() if saved else None,
+                    "artifact": "evidence/runs/01-discovery/capability.json" if saved else None,
                 }
             )
             if found.capability is None or saved is None:
@@ -324,7 +328,9 @@ async def main(decider_kind: str) -> int:
                     "reason": found2.reason,
                     "model": decider.model_name,
                     "steps": len(found2.steps),
-                    "artifact": saved2.as_posix() if saved2 else None,
+                    "artifact": "evidence/runs/13-discovery-open-sub-account/capability.json"
+                    if saved2
+                    else None,
                 }
             )
 
