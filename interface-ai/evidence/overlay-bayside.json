@@ -2,7 +2,7 @@
   "schema_version": "overlay/1",
   "tenant": "bayside",
   "capability": "harbor.member.savings_balance",
-  "base_version": 1,
+  "base_version": 2,
   "targets": {
     "s04": {
       "description": "link \"Member Inquiry\"",
@@ -105,11 +105,11 @@
   "review": {
     "status": "approved",
     "reviewed_by": "operator.sim (evidence script)",
-    "reviewed_at": "2026-09-19T16:46:26.971032Z"
+    "reviewed_at": "2026-09-19T21:25:10.112967Z"
   },
   "provenance": {
-    "proposed_from_run": "replay_20260919T164624_cf0cce",
-    "proposed_at": "2026-09-19T16:46:26.962317Z",
+    "proposed_from_run": "replay_20260919T212506_9b6978",
+    "proposed_at": "2026-09-19T21:25:10.095205Z",
     "reason": "steps resolved only via fallback strategies: s04, s05, s06, s07"
   }
 }

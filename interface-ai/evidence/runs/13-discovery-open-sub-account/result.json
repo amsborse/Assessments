@@ -1,10 +1,10 @@
 {
   "status": "succeeded",
-  "reason": "Signed on and looked up the member. Opened the requested sub-account with the initial deposit taken from Share Savings (S01), then confirmed it. The confirmation number was extracted as confirmation_number.",
+  "reason": "Signed on to the teller console, looked up the member, opened the requested sub-account funded by the initial deposit from Share Savings (S01), confirmed it, and extracted the confirmation number from the confirmation page.",
   "outputs": {
     "confirmation_number": "HC100231"
   },
-  "capability": "harbor.member.open_sub_account@v1",
+  "capability": "harbor.member.open_sub_account@v2",
   "human_actions": 0,
   "steps": 12
 }

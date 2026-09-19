@@ -1,7 +1,7 @@
 {
   "schema_version": "capability/1",
   "id": "harbor.member.savings_balance",
-  "version": 1,
+  "version": 2,
   "title": "Member savings balance lookup",
   "description": "Sign on to the teller console, look up member {{member_id}}, and read the current balance of their Share Savings account and the member's name.",
   "app": {
@@ -46,7 +46,7 @@
   "steps": [
     {
       "id": "s01",
-      "intent": "Enter operator ID to sign on.",
+      "intent": "Enter the operator ID to sign on to the teller console.",
       "action": "fill",
       "target": {
         "description": "textbox \"Operator ID:\"",
@@ -80,7 +80,7 @@
     },
     {
       "id": "s02",
-      "intent": "Enter the operator password to sign on.",
+      "intent": "Enter the operator password to complete sign-on credentials.",
       "action": "fill",
       "target": {
         "description": "textbox \"Password:\"",
@@ -114,7 +114,7 @@
     },
     {
       "id": "s03",
-      "intent": "Submit the sign-on form with the entered credentials.",
+      "intent": "Submit the sign-on form to access the teller console.",
       "action": "click",
       "target": {
         "description": "button \"Sign On\"",
@@ -183,7 +183,7 @@
     },
     {
       "id": "s04",
-      "intent": "Open Member Inquiry to look up the member.",
+      "intent": "Open Member Inquiry to search for the member number.",
       "action": "click",
       "target": {
         "description": "link \"Member Inquiry\"",
@@ -233,7 +233,7 @@
     },
     {
       "id": "s05",
-      "intent": "Enter the member number to look up the member.",
+      "intent": "Enter the member number to look up the member record.",
       "action": "fill",
       "target": {
         "description": "textbox \"Member #:\"",
@@ -269,7 +269,7 @@
     },
     {
       "id": "s06",
-      "intent": "Submit the member search for the entered member number.",
+      "intent": "Submit the member number search to retrieve the member record.",
       "action": "click",
       "target": {
         "description": "button \"Search\"",
@@ -315,7 +315,7 @@
     },
     {
       "id": "s07",
-      "intent": "Read the Share Savings balance from the member's account table.",
+      "intent": "Record the Share Savings account current balance from the member detail account table.",
       "action": "extract",
       "target": {
         "description": "'Balance' of row 'Share Savings'",
@@ -346,7 +346,7 @@
     },
     {
       "id": "s08",
-      "intent": "Read the member's name from the member record.",
+      "intent": "Record the member's name from the Member Detail record to complete the declared outputs.",
       "action": "extract",
       "target": {
         "description": "value labelled 'Name:'",
@@ -437,9 +437,9 @@
     "notes": null
   },
   "provenance": {
-    "discovery_run_id": "discovery_20260919T164337_205dba",
+    "discovery_run_id": "discovery_20260919T212208_8c6f1f",
     "model": "claude-opus-5 (via Claude Code CLI)",
-    "recorded_at": "2026-09-19T16:44:31.290504Z",
+    "recorded_at": "2026-09-19T21:23:02.792333Z",
     "goal": "Sign on to the teller console, look up member {{member_id}}, and read the current balance of their Share Savings account and the member's name.",
     "human_steps": 0
   }

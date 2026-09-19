@@ -82,15 +82,15 @@ footer { color:var(--muted); font-size:13px; margin-top:32px; max-width:80ch; }
   
 <article class="disc" id="01-discovery" data-cat="succeeded" style="--c:#1f7a4d">
   <header><h3>Discover: member savings balance lookup</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></header>
-  <p class="meta">claude-opus-5 (via Claude Code CLI), 8 recorded steps. Signed on to the teller console, looked up the member, and extracted the Share Savings balance and the member name from the Member Detail page.</p>
-  <ol class="steps"><li class=""><span class="tool">fill_secret</span><span class="det">operator_id</span><span class="why">Enter operator ID to sign on.</span></li><li class=""><span class="tool">fill_secret</span><span class="det">operator_password</span><span class="why">Enter the operator password to sign on.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the sign-on form with the entered credentials.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open Member Inquiry to look up the member.</span></li><li class=""><span class="tool">fill</span><span class="det">{{member_id}}</span><span class="why">Enter the member number to look up the member.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the member search for the entered member number.</span></li><li class=""><span class="tool">extract</span><span class="det">savings_balance</span><span class="why">Read the Share Savings balance from the member&#x27;s account table.</span></li><li class=""><span class="tool">extract</span><span class="det">member_name</span><span class="why">Read the member&#x27;s name from the member record.</span></li><li class=""><span class="tool">finish</span><span class="det"></span><span class="why">Both outputs have been extracted.</span></li></ol>
-  <p class="links"><a href="runs/01-discovery/events.jsonl">events</a> <a href="runs/01-discovery/result.json">result</a> <a href="../catalog/capabilities/harbor.member.savings_balance/v1.json">artifact</a></p>
+  <p class="meta">claude-opus-5 (via Claude Code CLI), 8 recorded steps. Signed on to the teller console, looked up the member via Member Inquiry, and extracted the Share Savings (S01) current balance and the member name from the Member Detail record.</p>
+  <ol class="steps"><li class=""><span class="tool">fill_secret</span><span class="det">operator_id</span><span class="why">Enter the operator ID to sign on to the teller console.</span></li><li class=""><span class="tool">fill_secret</span><span class="det">operator_password</span><span class="why">Enter the operator password to complete sign-on credentials.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the sign-on form to access the teller console.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open Member Inquiry to search for the member number.</span></li><li class=""><span class="tool">fill</span><span class="det">{{member_id}}</span><span class="why">Enter the member number to look up the member record.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the member number search to retrieve the member record.</span></li><li class=""><span class="tool">extract</span><span class="det">savings_balance</span><span class="why">Record the Share Savings account current balance from the member detail account table.</span></li><li class=""><span class="tool">extract</span><span class="det">member_name</span><span class="why">Record the member&#x27;s name from the Member Detail record to complete the declared outputs.</span></li><li class=""><span class="tool">finish</span><span class="det"></span><span class="why">Member record retrieved and both declared outputs extracted.</span></li></ol>
+  <p class="links"><a href="runs/01-discovery/events.jsonl">events</a> <a href="runs/01-discovery/result.json">result</a> <a href="../evidence/runs/01-discovery/capability.json">artifact</a></p>
 </article>
 <article class="disc" id="13-discovery-open-sub-account" data-cat="succeeded" style="--c:#1f7a4d">
   <header><h3>Discover: open a sub-account (irreversible, approved by a person)</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></header>
-  <p class="meta">claude-opus-5 (via Claude Code CLI), 12 recorded steps. Signed on and looked up the member. Opened the requested sub-account with the initial deposit taken from Share Savings (S01), then confirmed it. The confirmation number was extracted as confirmation_number.</p>
-  <ol class="steps"><li class=""><span class="tool">fill_secret</span><span class="det">operator_id</span><span class="why">Enter operator ID to sign on.</span></li><li class=""><span class="tool">fill_secret</span><span class="det">operator_password</span><span class="why">Enter the operator password to sign on.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit sign-on form with entered credentials.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open Member Inquiry to look up the member.</span></li><li class=""><span class="tool">fill</span><span class="det">{{member_id}}</span><span class="why">Enter the member number to look up the member.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the member search to look up the member.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open the sub-account creation form for this member.</span></li><li class=""><span class="tool">select</span><span class="det">{{product}}</span><span class="why">Choose the requested sub-account product.</span></li><li class=""><span class="tool">fill</span><span class="det">{{initial_deposit}}</span><span class="why">Enter the initial deposit amount.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Product, deposit, and funding suffix S01 are set; continue to the confirmation step.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">The review screen shows funding suffix S01 with the requested product and deposit; the task asks to confirm opening the sub-account.</span></li><li class="hand"><span class="tool">handoff</span><span class="det"></span><span class="why">Approval required: &#x27;Confirm&#x27; is classified irreversible</span></li><li class=""><span class="tool">extract</span><span class="det">confirmation_number</span><span class="why">Read the confirmation number of the opened sub-account.</span></li><li class=""><span class="tool">finish</span><span class="det"></span><span class="why">The sub-account is open and the confirmation number has been extracted.</span></li></ol>
-  <p class="links"><a href="runs/13-discovery-open-sub-account/events.jsonl">events</a> <a href="runs/13-discovery-open-sub-account/result.json">result</a> <a href="../catalog/capabilities/harbor.member.open_sub_account/v1.json">artifact</a></p>
+  <p class="meta">claude-opus-5 (via Claude Code CLI), 12 recorded steps. Signed on to the teller console, looked up the member, opened the requested sub-account funded by the initial deposit from Share Savings (S01), confirmed it, and extracted the confirmation number from the confirmation page.</p>
+  <ol class="steps"><li class=""><span class="tool">fill_secret</span><span class="det">operator_id</span><span class="why">Enter the operator ID to sign on to the teller console.</span></li><li class=""><span class="tool">fill_secret</span><span class="det">operator_password</span><span class="why">Enter the operator password to sign on.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the sign-on form with the entered credentials.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open Member Inquiry to look up the member account.</span></li><li class=""><span class="tool">fill</span><span class="det">{{member_id}}</span><span class="why">Enter the member number to look up the member.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the member lookup search.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Open the sub-account creation form for this member.</span></li><li class=""><span class="tool">select</span><span class="det">{{product}}</span><span class="why">Select the requested sub-account product.</span></li><li class=""><span class="tool">fill</span><span class="det">{{initial_deposit}}</span><span class="why">Enter the initial deposit amount to fund the new sub-account.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Submit the sub-account form to proceed to the confirmation step.</span></li><li class=""><span class="tool">click</span><span class="det"></span><span class="why">Confirm the sub-account opening as the task requires.</span></li><li class="hand"><span class="tool">handoff</span><span class="det"></span><span class="why">Approval required: &#x27;Confirm&#x27; is classified irreversible</span></li><li class=""><span class="tool">extract</span><span class="det">confirmation_number</span><span class="why">The confirmation page shows the confirmation number, which is the declared output.</span></li><li class=""><span class="tool">finish</span><span class="det"></span><span class="why">Goal met and the declared output was extracted.</span></li></ol>
+  <p class="links"><a href="runs/13-discovery-open-sub-account/events.jsonl">events</a> <a href="runs/13-discovery-open-sub-account/result.json">result</a> <a href="../evidence/runs/13-discovery-open-sub-account/capability.json">artifact</a></p>
 </article>
   <h2>Replay: deterministic, no model in the loop</h2>
   <ol class="runs">
@@ -98,7 +98,7 @@ footer { color:var(--muted); font-size:13px; margin-top:32px; max-width:80ch; }
   <div class="body">
     <div class="top"><h3>Replay for the recorded member</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></div>
     <div class="tags"></div>
-    <p class="links"><a href="runs/02-replay-success/events.jsonl">events</a> <a href="runs/02-replay-success/result.json">result</a> <span class="ms">1.9s</span></p>
+    <p class="links"><a href="runs/02-replay-success/events.jsonl">events</a> <a href="runs/02-replay-success/result.json">result</a> <span class="ms">2.0s</span></p>
   </div>
 </li>
 <li class="run" id="03-replay-other-member" data-cat="succeeded" style="--c:#1f7a4d">
@@ -119,63 +119,63 @@ footer { color:var(--muted); font-size:13px; margin-top:32px; max-width:80ch; }
   <div class="body">
     <div class="top"><h3>Unknown member is a business answer, not a crash</h3><span class="chip" style="--c:#2459c9">Business outcome</span></div>
     <div class="tags"><span class="tag">outcome <b>member_not_found</b></span></div>
-    <p class="links"><a href="runs/05-replay-not-found/events.jsonl">events</a> <a href="runs/05-replay-not-found/result.json">result</a> <span class="ms">1.4s</span></p>
+    <p class="links"><a href="runs/05-replay-not-found/events.jsonl">events</a> <a href="runs/05-replay-not-found/result.json">result</a> <span class="ms">1.5s</span></p>
   </div>
 </li>
 <li class="run" id="06-replay-fraud-alert-dialog" data-cat="business" style="--c:#2459c9">
   <div class="body">
     <div class="top"><h3>Fraud-alert dialog stops disclosure</h3><span class="chip" style="--c:#2459c9">Business outcome</span></div>
     <div class="tags"><span class="tag">outcome <b>member_fraud_alert</b></span></div>
-    <p class="links"><a href="runs/06-replay-fraud-alert-dialog/events.jsonl">events</a> <a href="runs/06-replay-fraud-alert-dialog/result.json">result</a> <span class="ms">1.4s</span></p>
+    <p class="links"><a href="runs/06-replay-fraud-alert-dialog/events.jsonl">events</a> <a href="runs/06-replay-fraud-alert-dialog/result.json">result</a> <span class="ms">1.6s</span></p>
   </div>
 </li>
 <li class="run" id="07-replay-recover-interstitial" data-cat="recovered" style="--c:#b7791f">
   <div class="body">
     <div class="top"><h3>Maintenance notice is acknowledged</h3><span class="chip" style="--c:#b7791f">Recovered</span></div>
     <div class="tags"><span class="tag">maintenance_notice → <b>dismiss</b></span></div>
-    <p class="links"><a href="runs/07-replay-recover-interstitial/events.jsonl">events</a> <a href="runs/07-replay-recover-interstitial/result.json">result</a> <span class="ms">3.3s</span></p>
+    <p class="links"><a href="runs/07-replay-recover-interstitial/events.jsonl">events</a> <a href="runs/07-replay-recover-interstitial/result.json">result</a> <span class="ms">3.5s</span></p>
   </div>
 </li>
 <li class="run" id="08-replay-recover-transient-503" data-cat="recovered" style="--c:#b7791f">
   <div class="body">
     <div class="top"><h3>Transient host timeout is retried</h3><span class="chip" style="--c:#b7791f">Recovered</span></div>
     <div class="tags"><span class="tag">host_unavailable → <b>retry step</b></span><span class="tag">host_unavailable → <b>retry step</b></span></div>
-    <p class="links"><a href="runs/08-replay-recover-transient-503/events.jsonl">events</a> <a href="runs/08-replay-recover-transient-503/result.json">result</a> <span class="ms">5.8s</span></p>
+    <p class="links"><a href="runs/08-replay-recover-transient-503/events.jsonl">events</a> <a href="runs/08-replay-recover-transient-503/result.json">result</a> <span class="ms">6.1s</span></p>
   </div>
 </li>
 <li class="run" id="09-replay-session-expired-restart" data-cat="recovered" style="--c:#b7791f">
   <div class="body">
     <div class="top"><h3>Expired session restarts the flow</h3><span class="chip" style="--c:#b7791f">Recovered</span></div>
     <div class="tags"><span class="tag">session_expired → <b>restart</b></span></div>
-    <p class="links"><a href="runs/09-replay-session-expired-restart/events.jsonl">events</a> <a href="runs/09-replay-session-expired-restart/result.json">result</a> <span class="ms">4.2s</span></p>
+    <p class="links"><a href="runs/09-replay-session-expired-restart/events.jsonl">events</a> <a href="runs/09-replay-session-expired-restart/result.json">result</a> <span class="ms">5.0s</span></p>
   </div>
 </li>
 <li class="run" id="10-replay-hard-failure-app-error" data-cat="failed" style="--c:#b3261e">
   <div class="body">
     <div class="top"><h3>Application error page stops the run</h3><span class="chip" style="--c:#b3261e">Failed</span></div>
     <div class="tags"><span class="tag">error <b>known_failure_state</b></span></div>
-    <p class="links"><a href="runs/10-replay-hard-failure-app-error/events.jsonl">events</a> <a href="runs/10-replay-hard-failure-app-error/result.json">result</a> <span class="ms">1.6s</span></p>
+    <p class="links"><a href="runs/10-replay-hard-failure-app-error/events.jsonl">events</a> <a href="runs/10-replay-hard-failure-app-error/result.json">result</a> <span class="ms">2.1s</span></p>
   </div><a class="thumb" href="runs/10-replay-hard-failure-app-error/screenshots/019-failure.jpg"><img src="runs/10-replay-hard-failure-app-error/screenshots/019-failure.jpg" alt="Screenshot from 10-replay-hard-failure-app-error" loading="lazy"></a>
 </li>
 <li class="run" id="11-replay-handoff-supervisor-override" data-cat="human" style="--c:#6d4bc4">
   <div class="body">
     <div class="top"><h3>Supervisor override entered by a person</h3><span class="chip" style="--c:#6d4bc4">Person involved</span></div>
     <div class="tags"><span class="tag">escalation → <b>resume</b></span></div>
-    <p class="links"><a href="runs/11-replay-handoff-supervisor-override/events.jsonl">events</a> <a href="runs/11-replay-handoff-supervisor-override/result.json">result</a> <span class="ms">4.6s</span></p>
+    <p class="links"><a href="runs/11-replay-handoff-supervisor-override/events.jsonl">events</a> <a href="runs/11-replay-handoff-supervisor-override/result.json">result</a> <span class="ms">5.0s</span></p>
   </div><a class="thumb" href="runs/11-replay-handoff-supervisor-override/screenshots/019-handoff-s06.jpg"><img src="runs/11-replay-handoff-supervisor-override/screenshots/019-handoff-s06.jpg" alt="Screenshot from 11-replay-handoff-supervisor-override" loading="lazy"></a>
 </li>
 <li class="run" id="12-replay-other-tenant-drift" data-cat="succeeded" style="--c:#1f7a4d">
   <div class="body">
     <div class="top"><h3>Same capability on a second credit union</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></div>
     <div class="tags"><span class="tag">locator drift: <b>s04 via href, s05 via field_name, s06 via css, s07 via css</b></span></div>
-    <p class="links"><a href="runs/12-replay-other-tenant-drift/events.jsonl">events</a> <a href="runs/12-replay-other-tenant-drift/result.json">result</a> <span class="ms">1.9s</span></p>
+    <p class="links"><a href="runs/12-replay-other-tenant-drift/events.jsonl">events</a> <a href="runs/12-replay-other-tenant-drift/result.json">result</a> <span class="ms">2.1s</span></p>
   </div>
 </li>
 <li class="run" id="14-replay-sub-account-approval" data-cat="human" style="--c:#6d4bc4">
   <div class="body">
     <div class="top"><h3>Draft write capability waits for approval before committing</h3><span class="chip" style="--c:#6d4bc4">Person involved</span></div>
     <div class="tags"><span class="tag">approval → <b>approve</b></span></div>
-    <p class="links"><a href="runs/14-replay-sub-account-approval/events.jsonl">events</a> <a href="runs/14-replay-sub-account-approval/result.json">result</a> <span class="ms">4.3s</span></p>
+    <p class="links"><a href="runs/14-replay-sub-account-approval/events.jsonl">events</a> <a href="runs/14-replay-sub-account-approval/result.json">result</a> <span class="ms">4.8s</span></p>
   </div><a class="thumb" href="runs/14-replay-sub-account-approval/screenshots/033-handoff-s11.jpg"><img src="runs/14-replay-sub-account-approval/screenshots/033-handoff-s11.jpg" alt="Screenshot from 14-replay-sub-account-approval" loading="lazy"></a>
 </li></ol>
   <h2>Beyond the brief: tenants, repair, confidence, agents</h2>
@@ -184,21 +184,21 @@ footer { color:var(--muted); font-size:13px; margin-top:32px; max-width:80ch; }
   <div class="body">
     <div class="top"><h3>Drift on a second tenant becomes a draft overlay</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></div>
     <div class="tags"><span class="tag">locator drift: <b>s04 via href, s05 via field_name, s06 via css, s07 via css</b></span></div>
-    <p class="links"><a href="runs/15-overlay-proposed-from-drift/events.jsonl">events</a> <a href="runs/15-overlay-proposed-from-drift/result.json">result</a> <span class="ms">2.0s</span></p>
+    <p class="links"><a href="runs/15-overlay-proposed-from-drift/events.jsonl">events</a> <a href="runs/15-overlay-proposed-from-drift/result.json">result</a> <span class="ms">2.7s</span></p>
   </div>
 </li>
 <li class="run" id="16-replay-with-approved-overlay" data-cat="succeeded" style="--c:#1f7a4d">
   <div class="body">
     <div class="top"><h3>Approved overlay: same tenant, zero drift</h3><span class="chip" style="--c:#1f7a4d">Succeeded</span></div>
     <div class="tags"><span class="tag">overlay <b>bayside (approved)</b></span></div>
-    <p class="links"><a href="runs/16-replay-with-approved-overlay/events.jsonl">events</a> <a href="runs/16-replay-with-approved-overlay/result.json">result</a> <span class="ms">1.9s</span></p>
+    <p class="links"><a href="runs/16-replay-with-approved-overlay/events.jsonl">events</a> <a href="runs/16-replay-with-approved-overlay/result.json">result</a> <span class="ms">2.2s</span></p>
   </div>
 </li>
 <li class="run" id="17-redesign-breaks-a-step" data-cat="failed" style="--c:#b3261e">
   <div class="body">
     <div class="top"><h3>A redesigned menu: the recorded link is gone</h3><span class="chip" style="--c:#b3261e">Failed</span></div>
     <div class="tags"><span class="tag">error <b>target_not_found</b></span></div>
-    <p class="links"><a href="runs/17-redesign-breaks-a-step/events.jsonl">events</a> <a href="runs/17-redesign-breaks-a-step/result.json">result</a> <span class="ms">11.2s</span></p>
+    <p class="links"><a href="runs/17-redesign-breaks-a-step/events.jsonl">events</a> <a href="runs/17-redesign-breaks-a-step/result.json">result</a> <span class="ms">11.1s</span></p>
   </div><a class="thumb" href="runs/17-redesign-breaks-a-step/screenshots/011-failure.jpg"><img src="runs/17-redesign-breaks-a-step/screenshots/011-failure.jpg" alt="Screenshot from 17-redesign-breaks-a-step" loading="lazy"></a>
 </li>
 <li class="run" id="18-assisted-repair" data-cat="assisted" style="--c:#0f766e">
@@ -213,7 +213,7 @@ footer { color:var(--muted); font-size:13px; margin-top:32px; max-width:80ch; }
   <div class="gauge" style="--p:100"><span>100%</span></div>
   <div><h3>Confidence 100%: eligible for unattended use</h3>
     <p class="meta">Every golden case replayed 5 times. Pass rate 100%,
-    found by primary locator 100%, p50 1.6s, p95 1.9s.
+    found by primary locator 100%, p50 1.9s, p95 2.5s.
     Approval is refused below 95% or under 5 runs per case.</p>
     <ul class="cases"><li><span>recorded member</span><b>5/5</b></li><li><span>unseen member</span><b>5/5</b></li><li><span>unknown member</span><b>5/5</b></li><li><span>malformed input</span><b>5/5</b></li></ul>
     <p class="links"><a href="certification.json">certification.json</a> <a href="capability.json">capability.json</a></p></div>

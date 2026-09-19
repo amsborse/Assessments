@@ -1,15 +1,15 @@
 {
-  "id": "iv_731f8a4235",
-  "session_id": "replay_20260919T164619_3e824a",
-  "run_id": "replay_20260919T164619_3e824a",
+  "id": "iv_2f36a8a1aa",
+  "session_id": "replay_20260919T212500_d970e9",
+  "run_id": "replay_20260919T212500_d970e9",
   "kind": "approval",
   "reason": "Approval required: 'Confirm' is classified irreversible",
   "context": {
-    "capability": "harbor.member.open_sub_account@v1",
+    "capability": "harbor.member.open_sub_account@v2",
     "step": "s11",
-    "intent": "The review screen shows funding suffix S01 with the requested product and deposit; the task asks to confirm opening the sub-account.",
+    "intent": "Confirm the sub-account opening as the task requires.",
     "state": null,
-    "screen": "http://127.0.0.1:56515/console"
+    "screen": "http://127.0.0.1:50225/console"
   },
   "screenshot": "screenshots/033-handoff-s11.jpg",
   "allowed_resolutions": [
@@ -17,10 +17,10 @@
     "deny",
     "abort"
   ],
-  "created_at": "2026-09-19T16:46:22.504995Z",
+  "created_at": "2026-09-19T21:25:04.268515Z",
   "status": "resolved",
   "claimed_by": "operator.sim",
-  "claimed_at": "2026-09-19T16:46:23.604050Z",
+  "claimed_at": "2026-09-19T21:25:05.447573Z",
   "resolution": {
     "action": "approve",
     "operator": "operator.sim",

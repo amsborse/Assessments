@@ -1,6 +1,6 @@
 {
-  "capability": "harbor.member.savings_balance@v1",
-  "certified_at": "2026-09-19T16:47:35.845600Z",
+  "capability": "harbor.member.savings_balance@v2",
+  "certified_at": "2026-09-19T21:26:32.989604Z",
   "tenant": null,
   "runs_per_case": 5,
   "cases": [
@@ -32,8 +32,8 @@
   "pass_rate": 1.0,
   "primary_locator_rate": 1.0,
   "fragile_steps": [],
-  "p50_ms": 1593,
-  "p95_ms": 1921,
+  "p50_ms": 1921,
+  "p95_ms": 2516,
   "confidence": 1.0,
   "eligible_for_approval": true
 }

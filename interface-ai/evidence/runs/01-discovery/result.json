@@ -1,11 +1,11 @@
 {
   "status": "succeeded",
-  "reason": "Signed on to the teller console, looked up the member, and extracted the Share Savings balance and the member name from the Member Detail page.",
+  "reason": "Signed on to the teller console, looked up the member via Member Inquiry, and extracted the Share Savings (S01) current balance and the member name from the Member Detail record.",
   "outputs": {
     "savings_balance": "\u2588\u2588\u2588\u258807",
     "member_name": "\u2588\u2588\u2588\u2588ry"
   },
-  "capability": "harbor.member.savings_balance@v1",
+  "capability": "harbor.member.savings_balance@v2",
   "human_actions": 0,
   "steps": 8
 }

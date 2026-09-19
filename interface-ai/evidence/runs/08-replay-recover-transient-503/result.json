@@ -1,6 +1,6 @@
 {
-  "run_id": "replay_20260919T164444_0bc30f",
-  "capability": "harbor.member.savings_balance@v1",
+  "run_id": "replay_20260919T212318_70a0ea",
+  "capability": "harbor.member.savings_balance@v2",
   "status": "succeeded",
   "outputs": {
     "savings_balance": "\u2588\u2588\u2588\u258807",
@@ -30,5 +30,5 @@
   "assisted_steps": [],
   "proposed_targets": {},
   "steps_completed": 8,
-  "duration_ms": 5781
+  "duration_ms": 6139
 }

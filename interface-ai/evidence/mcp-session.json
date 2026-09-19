@@ -6,7 +6,7 @@
   "list_capabilities": [
     {
       "name": "harbor.member.open_sub_account",
-      "version": 1,
+      "version": 2,
       "title": "Open a sub-account for a member",
       "description": "Sign on to the teller console, look up member {{member_id}}, open a new {{product}} sub-account funded with an initial deposit of {{initial_deposit}} from the member's Share Savings (suffix S01), confirm it, and read the confirmation number.",
       "input_schema": {
@@ -56,7 +56,7 @@
     },
     {
       "name": "harbor.member.savings_balance",
-      "version": 1,
+      "version": 2,
       "title": "Member savings balance lookup",
       "description": "Sign on to the teller console, look up member {{member_id}}, and read the current balance of their Share Savings account and the member's name.",
       "input_schema": {

@@ -1,6 +1,6 @@
 {
-  "run_id": "replay_20260919T164619_3e824a",
-  "capability": "harbor.member.open_sub_account@v1",
+  "run_id": "replay_20260919T212500_d970e9",
+  "capability": "harbor.member.open_sub_account@v2",
   "status": "succeeded",
   "outputs": {
     "confirmation_number": "HC100232"
@@ -11,7 +11,7 @@
   "degraded_locators": [],
   "handoffs": [
     {
-      "intervention_id": "iv_731f8a4235",
+      "intervention_id": "iv_2f36a8a1aa",
       "kind": "approval",
       "reason": "Approval required: 'Confirm' is classified irreversible",
       "resolution": "approve",
@@ -25,5 +25,5 @@
   "assisted_steps": [],
   "proposed_targets": {},
   "steps_completed": 12,
-  "duration_ms": 4264
+  "duration_ms": 4827
 }

@@ -1,15 +1,15 @@
 {
-  "id": "iv_a2ceff4664",
-  "session_id": "replay_20260919T164457_88f8b5",
-  "run_id": "replay_20260919T164457_88f8b5",
+  "id": "iv_775766a6e8",
+  "session_id": "replay_20260919T212334_ecc492",
+  "run_id": "replay_20260919T212334_ecc492",
   "kind": "escalation",
   "reason": "Restricted (employee) record; a supervisor must enter an override.",
   "context": {
-    "capability": "harbor.member.savings_balance@v1",
+    "capability": "harbor.member.savings_balance@v2",
     "step": "s06",
-    "intent": "Submit the member search for the entered member number.",
+    "intent": "Submit the member number search to retrieve the member record.",
     "state": "supervisor_override_required",
-    "screen": "http://127.0.0.1:56515/console"
+    "screen": "http://127.0.0.1:50225/console"
   },
   "screenshot": "screenshots/019-handoff-s06.jpg",
   "allowed_resolutions": [
@@ -17,10 +17,10 @@
     "skip_step",
     "abort"
   ],
-  "created_at": "2026-09-19T16:44:59.674456Z",
+  "created_at": "2026-09-19T21:23:36.677286Z",
   "status": "resolved",
   "claimed_by": "operator.sim",
-  "claimed_at": "2026-09-19T16:45:00.829105Z",
+  "claimed_at": "2026-09-19T21:23:37.914696Z",
   "resolution": {
     "action": "resume",
     "operator": "operator.sim",
@@ -28,7 +28,7 @@
   },
   "human_actions": [
     {
-      "at": "2026-09-19T16:45:00.869884Z",
+      "at": "2026-09-19T21:23:37.977558Z",
       "operator": "operator.sim",
       "source": "console",
       "kind": "click",
@@ -38,7 +38,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.880896Z",
+      "at": "2026-09-19T21:23:37.985356Z",
       "operator": "operator.sim",
       "source": "page",
       "kind": "click",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.884117Z",
+      "at": "2026-09-19T21:23:37.987678Z",
       "operator": "operator.sim",
       "source": "console",
       "kind": "type",
@@ -60,7 +60,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.917429Z",
+      "at": "2026-09-19T21:23:38.026295Z",
       "operator": "operator.sim",
       "source": "console",
       "kind": "click",
@@ -70,7 +70,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.919439Z",
+      "at": "2026-09-19T21:23:38.031226Z",
       "operator": "operator.sim",
       "source": "page",
       "kind": "fill",
@@ -83,7 +83,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.920439Z",
+      "at": "2026-09-19T21:23:38.032347Z",
       "operator": "operator.sim",
       "source": "page",
       "kind": "click",
@@ -96,7 +96,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.923277Z",
+      "at": "2026-09-19T21:23:38.036492Z",
       "operator": "operator.sim",
       "source": "console",
       "kind": "type",
@@ -105,7 +105,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.941100Z",
+      "at": "2026-09-19T21:23:38.071598Z",
       "operator": "operator.sim",
       "source": "console",
       "kind": "click",
@@ -115,7 +115,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.943099Z",
+      "at": "2026-09-19T21:23:38.078629Z",
       "operator": "operator.sim",
       "source": "page",
       "kind": "fill",
@@ -128,7 +128,7 @@
       }
     },
     {
-      "at": "2026-09-19T16:45:00.944100Z",
+      "at": "2026-09-19T21:23:38.080243Z",
       "operator": "operator.sim",
       "source": "page",
       "kind": "click",

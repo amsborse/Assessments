@@ -1,6 +1,6 @@
 {
-  "run_id": "replay_20260919T164455_6db365",
-  "capability": "harbor.member.savings_balance@v1",
+  "run_id": "replay_20260919T212330_feed10",
+  "capability": "harbor.member.savings_balance@v2",
   "status": "failed",
   "outputs": {},
   "outcome": null,
@@ -8,7 +8,7 @@
     "code": "known_failure_state",
     "message": "Unhandled server exception page.",
     "step_id": "s06",
-    "step_intent": "Submit the member search for the entered member number.",
+    "step_intent": "Submit the member number search to retrieve the member record.",
     "state_id": "application_error",
     "expected": [],
     "observed": {
@@ -35,5 +35,5 @@
   "assisted_steps": [],
   "proposed_targets": {},
   "steps_completed": 5,
-  "duration_ms": 1610
+  "duration_ms": 2125
 }

@@ -1,6 +1,6 @@
 {
-  "run_id": "replay_20260919T164629_d1a634",
-  "capability": "harbor.member.savings_balance@v1",
+  "run_id": "replay_20260919T212513_4a5551",
+  "capability": "harbor.member.savings_balance@v2",
   "status": "failed",
   "outputs": {},
   "outcome": null,
@@ -8,7 +8,7 @@
     "code": "target_not_found",
     "message": "link \"Member Inquiry\" not found within 10000ms",
     "step_id": "s04",
-    "step_intent": "Open Member Inquiry to look up the member.",
+    "step_intent": "Open Member Inquiry to search for the member number.",
     "state_id": null,
     "expected": [
       "exactly one link \"Member Inquiry\""
@@ -44,5 +44,5 @@
   "assisted_steps": [],
   "proposed_targets": {},
   "steps_completed": 3,
-  "duration_ms": 11188
+  "duration_ms": 11141
 }

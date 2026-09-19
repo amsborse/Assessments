@@ -1,6 +1,6 @@
 {
-  "run_id": "replay_20260919T164457_88f8b5",
-  "capability": "harbor.member.savings_balance@v1",
+  "run_id": "replay_20260919T212334_ecc492",
+  "capability": "harbor.member.savings_balance@v2",
   "status": "succeeded",
   "outputs": {
     "savings_balance": "\u2588\u2588\u2588\u258800",
@@ -12,7 +12,7 @@
   "degraded_locators": [],
   "handoffs": [
     {
-      "intervention_id": "iv_a2ceff4664",
+      "intervention_id": "iv_775766a6e8",
       "kind": "escalation",
       "reason": "Restricted (employee) record; a supervisor must enter an override.",
       "resolution": "resume",
@@ -26,5 +26,5 @@
   "assisted_steps": [],
   "proposed_targets": {},
   "steps_completed": 8,
-  "duration_ms": 4578
+  "duration_ms": 5032
 }
