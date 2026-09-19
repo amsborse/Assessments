@@ -5,10 +5,9 @@
 Scenes: the target app → Claude discovers a capability → the catalog renders it → replays
 (new member, business outcome, recovery) → a person takes over the live session and hands it
 back → tenant drift → drift becomes a reviewed overlay → a redesign is fixed by one bounded
-model repair → certification → an agent calls it over MCP / it is exported as code → the
-evidence overview. Scenes beyond the brief carry a small "Beyond the brief" tag. Captions are
-drawn on the recording page only; the automation's own browser is never touched. Writes
-evidence/demo.mp4 (and .webm).
+model repair → the evidence overview. The two stretch-goal scenes carry a small "Stretch goal"
+tag. Captions are drawn on the recording page only; the automation's own browser is never
+touched. Writes evidence/demo.mp4 (and .webm).
 """
 
 import argparse
@@ -33,7 +32,7 @@ from assessments.capability.overlay import TenantStore
 from assessments.capability.store import CapabilityStore
 from assessments.config import Settings, get_settings
 from assessments.logging import configure_logging
-from assessments.service import certify, load_task, propose_overlay, run_discovery, run_replay
+from assessments.service import load_task, propose_overlay, run_discovery, run_replay
 from assessments.session.runtime import REGISTRY
 from demo_bank.app import create_demo_bank
 
@@ -84,7 +83,7 @@ def _serve_thread(app: Any) -> str:
     return f"http://127.0.0.1:{port}"
 
 
-BEYOND = "Beyond the brief"
+STRETCH = "Stretch goal"
 
 
 async def caption(
@@ -178,76 +177,6 @@ async def show_target(page: Page, bank: str) -> None:
     await asyncio.sleep(5)
 
 
-AGENT_CARD = """<!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-body{margin:0;background:#eef2f5;color:#16202b;font:15px/1.5 "Schibsted Grotesk","Segoe UI",sans-serif}
-header{background:#13233a;color:#fff;padding:12px 24px;font-weight:600}
-main{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px 32px 150px}
-section{background:#fff;border:1px solid #d7dee6;border-radius:10px;padding:18px 20px;min-width:0}
-h2{font-size:17px;margin:0 0 4px}
-p{margin:0 0 12px;color:#5b6878}
-.call{border-left:3px solid #2f7d6d;padding:4px 0 4px 12px;margin:10px 0}
-.call b{font-size:13px;color:#2f7d6d}
-pre{margin:4px 0 0;font:12.5px/1.5 Consolas,"Cascadia Mono",monospace;white-space:pre-wrap;
-overflow:hidden;color:#16202b}
-.code pre{background:#13233a;color:#dbe6f3;border-radius:8px;padding:12px 14px;max-height:470px}
-</style></head><body><header>How agents and teams use a capability</header><main>
-<section><h2>Any agent can call it, over MCP</h2>
-<p>Live calls to this project's MCP server, made while recording.</p>
-<div class="call"><b>list_capabilities</b><pre id="list"></pre></div>
-<div class="call"><b>invoke_capability</b><pre id="req"></pre></div>
-<div class="call"><b>result</b><pre id="res"></pre></div></section>
-<section class="code"><h2>Or export it as plain Playwright code</h2>
-<p><code>assessments codegen</code>: a standalone page object and pytest test.</p>
-<pre id="code"></pre></section></main></body></html>"""
-
-
-def _tool_json(result: Any) -> list[Any]:
-    """Every JSON block of an MCP tool result (a list return arrives as one block per item)."""
-    return [json.loads(getattr(block, "text", "null")) for block in result.content]
-
-
-async def show_agent_interfaces(page: Page, settings: Settings, bank: str, ref: str) -> None:
-    """Real MCP calls against the running bank, and the generated test, on one card."""
-    from assessments.capability.codegen import generate_test
-    from assessments.mcp_server import build_server
-
-    server = build_server(settings.model_copy(update={"target_base_url": bank}))
-    name = ref.split("@")[0]
-    # The capability was discovered minutes ago and is still a draft: drafts run only attended.
-    call = {"name": name, "params": {"member_id": "48213"}, "attended": True}
-    listed = _tool_json(await server.call_tool("list_capabilities", {}))
-    invoked = _tool_json(await server.call_tool("invoke_capability", call))[0]
-    items = [i for block in listed for i in (block if isinstance(block, list) else [block])]
-    names = "\n".join(
-        f"{c['name']}  ({c.get('review')}, {c.get('side_effects')}, inputs: "
-        f"{', '.join(c.get('input_schema', {}).get('properties', {}))})"
-        for c in items
-        if isinstance(c, dict)
-    )
-    request = json.dumps(call)
-    result = json.dumps(
-        {"status": invoked.get("status"), "outputs": invoked.get("outputs")}, indent=2
-    )
-    source = generate_test(CapabilityStore(settings.catalog_dir).load(ref), {"member_id": "48213"})
-    excerpt = source[source.index("    def run(") :].rstrip()
-    await page.set_content(AGENT_CARD)
-    await page.evaluate(
-        "([l, q, r, c]) => { for (const [id, v] of [['list', l], ['req', q], ['res', r], "
-        "['code', c]]) document.getElementById(id).textContent = v; }",
-        [names, request, result, excerpt],
-    )
-    await caption(
-        page,
-        "10. Agents call it; teams can own it as code",
-        "The MCP server lists every capability with a JSON-Schema contract and invokes it by "
-        "name. Codegen turns the same artifact into ordinary Playwright code.",
-        tag=BEYOND,
-    )
-    await asyncio.sleep(8)
-
-
 async def main(decider_kind: str) -> Path:
     base = get_settings()
     work = REPO / "data" / "demo-work"
@@ -277,7 +206,6 @@ async def main(decider_kind: str) -> Path:
                 {"id": tenant, "name": name, "product": "harbor-teller-console", "base_url": url}
             )
         )
-    shutil.copytree(REPO / "catalog" / "certification", work / "catalog" / "certification")
 
     console_port = _port()
     server = uvicorn.Server(
@@ -430,7 +358,7 @@ async def main(decider_kind: str) -> Path:
             "7. Drift becomes a reviewed overlay",
             "The fallback steps are re-derived on Bayside's own screens and proposed as a "
             "tenant overlay. Once approved, the same capability replays there with no drift.",
-            tag=BEYOND,
+            tag=STRETCH,
         )
         _, overlay_path = await propose_overlay(
             settings, ref, {"member_id": "12345"}, tenant="bayside"
@@ -446,7 +374,7 @@ async def main(decider_kind: str) -> Path:
             "7. Drift becomes a reviewed overlay",
             "The catalog now lists Bayside's approved overlay: only the drifting steps are "
             "specialised; the shared capability is untouched.",
-            tag=BEYOND,
+            tag=STRETCH,
         )
         await asyncio.sleep(4.5)
         await console.goto(f"http://127.0.0.1:{console_port}/operator")
@@ -455,7 +383,7 @@ async def main(decider_kind: str) -> Path:
             console,
             "7. Drift becomes a reviewed overlay",
             "Replaying at Bayside with the approved overlay: no fallback locators needed.",
-            tag=BEYOND,
+            tag=STRETCH,
         )
         await run_replay(settings, ref, {"member_id": "12345"}, tenant="bayside", headless=True)
         await asyncio.sleep(4)
@@ -465,7 +393,7 @@ async def main(decider_kind: str) -> Path:
             "8. A redesign breaks a step: one bounded repair",
             "Coastal's new menu removed the recorded link. Replay asks the model once to "
             "re-find that single element, verifies it, and flags the fix for review.",
-            tag=BEYOND,
+            tag=STRETCH,
         )
         await run_replay(
             settings,
@@ -476,27 +404,6 @@ async def main(decider_kind: str) -> Path:
             assist=decider if decider_kind != "offline" else None,
         )
         await asyncio.sleep(4)
-
-        await caption(
-            console,
-            "9. Confidence before trust",
-            "Golden cases are replayed five times each. Pass rate and locator health give "
-            "a confidence score, and approval is refused below 95%.",
-            tag=BEYOND,
-        )
-        await certify(settings, ref, runs=5, base_url=bank_a)
-        await console.goto(f"http://127.0.0.1:{console_port}/catalog?c={CAPABILITY}")
-        await console.wait_for_timeout(1500)
-        await caption(
-            console,
-            "9. Confidence before trust",
-            "Certified: every golden case passed on its primary locators, so the capability "
-            "is eligible for unattended use.",
-            tag=BEYOND,
-        )
-        await asyncio.sleep(5)
-
-        await show_agent_interfaces(console, settings, bank_a, ref)
 
         dashboard = REPO / "evidence" / "index.html"
         if dashboard.exists():

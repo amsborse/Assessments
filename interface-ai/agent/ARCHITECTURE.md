@@ -26,12 +26,12 @@ catalog/tasks/*.json ──▶ DiscoveryAgent ──(compile)──▶ catalog/c
 | App profile | `capability/profile.py`, `catalog/profiles/` | Per vendor product: known runtime states, redaction labels, irreversible control patterns. |
 | Store | `capability/store.py` | File-backed, versioned artifacts; approval (gated by certification in the CLI). |
 | Overlays | `capability/overlay.py` | Tenants and per-tenant overlays: reviewed target replacements pinned to a capability version. |
-| Certification | `capability/certification.py` | Golden cases × N replays → confidence score gating approval. |
+| Certification (experiment) | `capability/certification.py` | Golden cases × N replays → confidence score; the CLI refuses approval below it. |
 | Codegen | `capability/codegen.py` | Capability → standalone Playwright page object + pytest. |
 | Surface | `surfaces/base.py`, `surfaces/web/` | Perceive (a11y snapshot of all frames + redacted screenshot), act, resolve/verify targets, check conditions. The only technology-specific layer. |
 | Discovery | `agent/discovery.py`, `agent/decider.py`, `agent/actions.py` | Observe → decide (one stateless model call) → policy → act; stuck detection; compile to a capability. |
 | Replay | `replay/engine.py`, `replay/result.py` | No model. Resolve → policy → act → checkpoint, with known-state handling; structured result. Opt-in: overlay proposals on drift, one bounded model repair. |
-| MCP server | `mcp_server.py` | Capabilities as MCP tools (`list_capabilities`, `invoke_capability`) for AI agents. |
+| MCP server (experiment) | `mcp_server.py` | Capabilities as MCP tools (`list_capabilities`, `invoke_capability`) for AI agents. |
 | Control | `session/control.py`, `session/runtime.py` | Who may act on a live session; escalate/claim/release; session registry shared with the console. |
 | Safety | `safety.py`, `redaction.py`, `secrets.py` | Allowlists, irreversible-action gating, redaction, credential resolution. |
 | API | `api/` | Capability catalog API + catalog page; operator console (control track, activity feed, step rail). |

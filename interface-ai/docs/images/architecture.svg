@@ -27,7 +27,7 @@
   <text class="s" x="44" y="118">+ typed inputs / outputs</text>
 
   <rect class="box" x="262" y="52" width="210" height="84" rx="10" style="stroke:#2459c9"/>
-  <text class="t" x="278" y="80">Discovery (Claude)</text>
+  <text class="t" x="278" y="80">Discovery (LLM)</text>
   <text class="s" x="278" y="100">observe → decide → act</text>
   <text class="s" x="278" y="118">one tool call per step, with reason</text>
 
@@ -47,14 +47,14 @@
 
   <rect class="box" x="752" y="52" width="180" height="84" rx="10"/>
   <text class="t" x="768" y="80">Calling agent</text>
-  <text class="s" x="768" y="100">REST or MCP tool call</text>
+  <text class="s" x="768" y="100">calls a capability by name</text>
   <text class="s" x="768" y="118">typed params in, result out</text>
 
   <rect class="box" x="752" y="176" width="180" height="104" rx="10"/>
-  <text class="t" x="768" y="204">Confidence</text>
-  <text class="s" x="768" y="224">golden cases × N runs</text>
-  <text class="s" x="768" y="242">gates draft → approved</text>
-  <text class="s" x="768" y="260">tenant overlays from drift</text>
+  <text class="t" x="768" y="204">Tenants &amp; drift</text>
+  <text class="s" x="768" y="224">fallback locator = drift</text>
+  <text class="s" x="768" y="242">drift → tenant overlay</text>
+  <text class="s" x="768" y="260">redesign → bounded repair</text>
 
   <!-- shared foundation -->
   <rect class="box" x="28" y="328" width="444" height="112" rx="10"/>

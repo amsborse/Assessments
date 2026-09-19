@@ -33,7 +33,7 @@ Status: **met**, **met (stretch)**, **partial**, or **designed, not built**.
 | "typed input parameters" | met | `inputs: ParamSpec` (type, pattern/enum, sensitivity); validated before replay |
 | "typed outputs / data to extract and their shape" | met | `outputs: OutputSpec`; parsed (`money` → decimal string) |
 | "a checkpoint or success condition" | met | per-step `expect[]` + final `success[]` |
-| "versioned and reviewable" | met | integer `version`, `review {draft\|approved}`, JSON in git; approval gated by certification |
+| "versioned and reviewable" | met | integer `version`, `review {draft\|approved}`, JSON in git, reviewed as diffs; the catalog page renders it for review |
 
 ### 3.3 Deterministic replay
 | Brief | Status | Where / proof |
@@ -94,36 +94,33 @@ evidence for both runs" — **met**, end to end in [evidence/index.html](evidenc
 | `/REPORT.md`, ~1–3 pages, the seven headings | met | [REPORT.md](REPORT.md) (~1,600 words incl. tables, headings verbatim) |
 | `/evidence/`: artifact + discovery log + replay log; ideally an error replay; recording welcome | met | runs 01–18, [capability.json](evidence/capability.json), [demo.mp4](evidence/demo.mp4) |
 
-## §8 Optional stretch goals — all six implemented
+## §8 Optional stretch goals — "pick at most one or two, depth over breadth"
+
+Two are featured and built in depth; both extend the core (replay, drift, review) rather than sit
+beside it.
+
 | Stretch goal | Status | Where / proof |
 | --- | --- | --- |
-| Agent-facing capability interface | met (stretch) | REST `/api/capabilities` + **MCP server** (`assessments mcp`); [evidence/mcp-session.json](evidence/mcp-session.json) |
-| Code generation | met (stretch) | `assessments codegen` → standalone Playwright page object + pytest ([sample](docs/generated/test_harbor_member_savings_balance.py)); e2e runs the generated file |
-| Confidence & approval | met (stretch) | `assessments certify` → confidence score; `capabilities approve` refuses below 0.95 / 5 runs ([evidence/certification.json](evidence/certification.json)) |
-| Assisted fallback | met (stretch) | `replay --assist`: one bounded, policy-checked model repair, recorded as a proposal — runs 17 → 18 |
-| Canonicalization / cross-tenant reuse | met (stretch) | values templated into `{{params}}`; per-tenant overlays with review ([evidence/overlay-bayside.json](evidence/overlay-bayside.json)) |
-| Multi-run stability | met (stretch) | certification replays each golden case N times; pass rate, primary-locator rate, p50/p95 |
+| Canonicalization / cross-tenant reuse | **featured** | values templated into `{{params}}`; capabilities keyed by product; drift → draft overlay → approval → zero drift ([overlay.py](src/assessments/capability/overlay.py); runs 12 → 15 → 16; [evidence/overlay-bayside.json](evidence/overlay-bayside.json); `tests/e2e/test_beyond_the_brief.py`) |
+| Assisted fallback | **featured** | `replay --assist`: one bounded, policy-checked model repair, irreversible controls excluded, recorded as a proposal — runs 17 → 18; e2e covers a correct and a wrong repair |
+
+Also in the repo as small experiments, outside the design argument: confidence/certification
+(`assessments certify`, [evidence/certification.json](evidence/certification.json)), an MCP
+server (`assessments mcp`, [evidence/mcp-session.json](evidence/mcp-session.json)) and codegen
+(`assessments codegen`, [sample](docs/generated/test_harbor_member_savings_balance.py)).
 
 ## §9 Ground rules
 AI-assisted (Claude Code) — every part can be explained; no public site automated (local synthetic
 app only); no secrets in the repo (gitleaks in pre-commit and CI); scope documented in REPORT §7.
 
-## Beyond the brief — chosen for this evaluator
+## Why these two
 
-interface.ai's Nexus team works "at the intersection of agentic AI, data systems, and human-in-the-loop
-interfaces", building "feedback mechanisms, confidence scoring, and intelligent fallback layers"
-([Built In job listing](https://builtin.com/job/staff-engineer-backend-ai-nexus/6707180)); its
-platform executes "transactions into the core" under "rigorous security and governance with
-explainable, grounded retrieval" ([BankGPT announcement](https://interface.ai/blog/interfaceai-unveils-industry-first-agentic-bankgpt-platform/)).
-The additions map to those words directly:
+interface.ai's Nexus team describes its work as "feedback mechanisms, confidence scoring, and
+intelligent fallback layers" ([Built In job listing](https://builtin.com/job/staff-engineer-backend-ai-nexus/6707180))
+across many institutions on shared vendor cores. Overlays answer the many-institutions problem
+(one reviewed artifact, per-tenant deltas); bounded repair is a fallback layer that never gives
+the model the keys (one step, policy-checked, proposed for review).
 
-| Addition | Why it matters here |
-| --- | --- |
-| **Confidence scoring + certification gate** | "confidence scoring": capabilities earn unattended use from measured replays, not a checkbox |
-| **Bounded assisted repair** | "intelligent fallback layers" — without giving the model the keys: one step, policy-checked, proposed for review |
-| **Tenant overlays from drift** | 100+ institutions on shared vendor cores: one artifact, reviewed per-tenant deltas |
-| **MCP server** | their agents need hands; MCP makes any capability a typed tool for any agent |
-| **Live operator console with activity feed** | "human-in-the-loop interfaces": who holds control, what the agent did and why, in real time |
-| **Narrated video + colour-coded evidence** | reviewable in minutes: every outcome class, visibly distinguished |
-| **Code generation** | capabilities as reviewable code for QA teams, independent of this runtime |
-| **Production engineering** | `mypy --strict`, 126 tests (93 unit/integration, 33 browser E2E) incl. regression tests for real bugs found, CI per folder, non-root read-only container, secret scanning |
+Engineering: `mypy --strict`, 126 tests (93 unit/integration, 33 browser E2E) incl. regression
+tests for real bugs found, CI per folder, non-root read-only container (verified with
+`docker compose up` and a replay and a handoff through the containerised service), secret scanning.

@@ -25,8 +25,8 @@ Everything was redacted before it was written: credentials and input values appe
 | `runs/14` | Replay of that draft write capability: approval is required again before committing. |
 | `runs/15`, `16` | Drift on Bayside is re-derived into a draft overlay ([`overlay-bayside.json`](overlay-bayside.json)); once approved, the same capability replays there with zero drift. |
 | `runs/17`, `18` | Coastal's redesigned menu breaks one step (`target_not_found`); with `--assist`, one real `claude-opus-5` call re-finds the link and the fix is proposed for review. |
-| [`certification.json`](certification.json) | Golden cases replayed 5 times each: confidence score that gated the capability's approval. |
-| [`mcp-session.json`](mcp-session.json) | An agent lists capabilities and invokes one by name over MCP. |
+| [`certification.json`](certification.json) | Experiment. Golden cases replayed 5 times each: confidence score that gated the capability's approval. |
+| [`mcp-session.json`](mcp-session.json) | Experiment. An agent lists capabilities and invokes one by name over MCP. |
 
 Each run directory holds `events.jsonl` (structured log), `result.json` (the result contract as
 persisted) and, where relevant, `screenshots/`, `snapshots/`, `intervention-*.json`.

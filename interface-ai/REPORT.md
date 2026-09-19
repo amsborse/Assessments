@@ -31,10 +31,10 @@ is one scaling unit — is fine here; the seam for scale-out is the `LiveSession
 - **Contract first:** a task spec declares typed inputs/outputs/secrets; the model discovers
   *how*. It types `{{member_id}}` placeholders and uses `fill_secret`, so it never sees input
   values or credentials; raw values it types anyway are canonicalized into parameters.
-- **Model access:** one `Decider` protocol, two transports — the Messages API (tool use,
-  screenshot + snapshot) and the Claude Code CLI on a subscription (`claude -p`, isolated: no
-  tools/settings/memory, JSON-schema reply, snapshot only). The evidence used the latter with
-  `claude-opus-5`.
+- **Model-provider independence:** discovery depends on one `Decider` interface (observation in,
+  one validated action out). Providers are adapters: the Anthropic Messages API, the Claude Code
+  CLI on a subscription (used for the evidence, with `claude-opus-5`), and a scripted stand-in for
+  tests. Swapping models or vendors touches no other component.
 
 ## 2. Artifact schema
 
@@ -46,18 +46,21 @@ is one scaling unit — is fine here; the seam for scale-out is the `LiveSession
 | Identity | `id`, `version`, `title`, `description`, `app {product, product_version, surface, profile}` | Invoked by name; `product`, not tenant, is the reuse key. |
 | Contract | `inputs` (type, pattern/enum, **sensitivity**), `outputs`, `secrets` (env/vault refs), `outcomes` | Validated before touching the UI; sensitivity drives redaction; business outcomes are part of the API. |
 | Flow | `steps[]`: `intent`, `action`, `target`, `value` (`param`/`secret`/`literal` + templates), `risk`, `expect[]`, `timeout_ms` | No transcript, no raw values. |
-| Target | `scope` (frame/window path) + `strategies[]` in robustness order: `role`+name → `label` → `field_name` → `table_cell` (row key × column) → `text` → `css` | Each strategy is **verified at record time** to resolve uniquely to the element acted on. |
+| Target | `scope` (frame/window path) + `strategies[]` in rank order: `role`+name → `label` → `field_name` → `href` → `table_cell` (row key × column) → `text` → `css` | Each strategy is **verified at record time** to resolve uniquely to the element acted on. |
 | Checkpoints | `screen_title`, `text_visible`, `target_present`, `dialog`, `http_status` | Surface-neutral. |
 | Governance | `review {draft\|approved}`, `provenance`, derived `side_effects` | Unattended use requires approval. |
 
-Form-field `name`s are the server's POST contract and survive re-theming; table values are
-addressed by meaning ("Share Savings" × "Balance"), not position; CSS paths are a reported last
-resort. Invalid references (unknown params/secrets, outputs never extracted) fail validation.
+The ranking is *most meaningful and most portable first*: role+name and label are what a person
+perceives and map directly onto desktop accessibility trees; form-field `name`s and link routes
+are the server's contract, so they survive a tenant relabelling screens, but they are web-specific,
+so they rank behind; table values are addressed by meaning ("Share Savings" × "Balance"), not
+position; CSS paths are a reported last resort (the README walks through each rank). Invalid references (unknown params/secrets, outputs never extracted) fail validation.
 
 ## 3. Determinism & error handling
 
 Replay never calls a model. Per step: **wait (bounded) for a unique target → policy → act →
-wait (bounded) for the checkpoint**, polling every 250 ms — condition-based, no fixed sleeps. A
+wait (bounded) for the checkpoint**, polling every 250 ms. Waits are condition-based; the one fixed delay (150 ms after an action,
+before waiting for page loads) is a courtesy, since correctness rests on the checkpoint. A
 handled state (dismissal, backoff, restart, a person's handoff) restarts the wait's budget.
 While waiting, the engine scans **known states** (curated per vendor product in the app profile,
 overridable per capability), each with a deliberate response:
@@ -135,8 +138,8 @@ that acts only through the console API.
   values. Outputs are returned to the caller but masked at rest. Playwright traces are off.
 - **Model output is untrusted:** tool calls are schema-validated, page text is data, and policy
   sits outside the model, so prompt injection can only propose actions the policy judges.
-- **Trust is earned:** unattended use requires approval, and approval requires certification
-  (golden cases × 5, confidence ≥ 95%). The same gates apply over REST and MCP.
+- **Trust is earned:** a new capability is a draft; unattended invocation over the API requires
+  a person's approval (drafts run only when the caller says it is attended).
 
 Limits: redaction is heuristic; control names are a proxy for risk; the model and discovery
 snapshots see business values such as balances (never names, identifiers or credentials); operator
@@ -148,8 +151,10 @@ Left out: desktop/pixel surfaces (seam above), real co-browsing (a polling conso
 instead), a vault (env/.env behind `resolve_secrets`), worker scale-out, an OpenAI decider (the
 `Decider` seam), and an automated eval runner (cases in `evals/`). Operator identity is mocked.
 
-Built beyond the brief (all six stretch goals): certification and approval gating, tenant
-overlays, bounded model repair, an MCP server, code generation, and multi-run stability.
+Stretch goals, following the brief's "at most one or two": **cross-tenant reuse with reviewed
+overlays** and **bounded assisted fallback** (§3, §4). Small experiments also in the repo but not
+part of this design: a certification command (golden cases × N → confidence), an MCP server and
+codegen to a Playwright test.
 
 Next: (1) promote accepted repairs into overlays automatically, with the reviewer in the loop;
 (2) scheduled certification per tenant to catch drift before callers do; (3) a UIA surface for

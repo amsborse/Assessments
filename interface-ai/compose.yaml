@@ -24,6 +24,8 @@ services:
         condition: service_healthy
     init: true  # reap Chromium child processes
     env_file:
+      # Synthetic demo defaults first, so a fresh clone works with no setup; .env overrides them.
+      - path: .env.example
       - path: .env
         required: false
     environment:
