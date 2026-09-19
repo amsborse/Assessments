@@ -1,0 +1,30 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+- link "Member Inquiry" [e1]
+- link "Teller Home" [e2]
+- link "Daily Reports" [e3]
+- link "Sign Off" [e4]
+== frame "main" /main/member title="Member Detail"
+| Member Detail |
+# Member Detail
+| Member #: | █████ | Member Since: | 2009 |
+| Name: | █████ | SSN: | █████ |
+| DOB: | █████ | Phone: | █████ |
+| Address: | █████ |
+| Suffix | Description | Balance | Available |
+| S01 | Share Savings | $2,418.07 | $2,418.07 |
+| S10 | Share Draft Checking | $913.55 | $913.55 |
+| S40 | Holiday Club | $150.00 | $150.00 |
+- link "Open Sub-Account" [e5]
+- link "New Inquiry" [e6]
+Recent activity, last 30 days: +$2,096.01 in, ($508.79) out
+| Posted | Transaction | Suffix | Type | Amount |
+| 09/15 | Payroll direct deposit - HARBOR MARINE SUPPLY | S10 | Credit | +$1,842.60 |
+| 09/14 | Debit card - HANNAFORD #2231 | S10 | Debit | ($86.42) |
+| 09/12 | Transfer to Share Savings | S10 | Debit | ($250.00) |
+| 09/12 | Transfer from Share Draft Checking | S01 | Credit | +$250.00 |
+| 09/10 | ACH - CENTRAL MAINE POWER | S10 | Debit | ($112.37) |
+| 09/01 | Dividend | S01 | Credit | +$3.41 |
+| 08/30 | Shared branch withdrawal | S10 | Debit | ($60.00) |

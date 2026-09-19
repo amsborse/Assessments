@@ -1,0 +1,27 @@
+{"seq": 1, "ts": "2026-09-19T07:52:15.036033+00:00", "type": "run_started", "kind": "replay", "capability": "harbor.member.savings_balance@v1", "review": "draft", "params": ["member_id"]}
+{"seq": 2, "ts": "2026-09-19T07:52:15.058093+00:00", "type": "step_started", "step": "s01", "action": "fill", "intent": "Enter operator ID to sign on.", "target": "textbox \"Operator ID:\""}
+{"seq": 3, "ts": "2026-09-19T07:52:15.066171+00:00", "type": "policy", "step": "s01", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 4, "ts": "2026-09-19T07:52:15.259277+00:00", "type": "step_passed", "step": "s01", "strategy": "label"}
+{"seq": 5, "ts": "2026-09-19T07:52:15.259277+00:00", "type": "step_started", "step": "s02", "action": "fill", "intent": "Enter the operator password to sign on.", "target": "textbox \"Password:\""}
+{"seq": 6, "ts": "2026-09-19T07:52:15.263242+00:00", "type": "policy", "step": "s02", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 7, "ts": "2026-09-19T07:52:15.438911+00:00", "type": "step_passed", "step": "s02", "strategy": "label"}
+{"seq": 8, "ts": "2026-09-19T07:52:15.438911+00:00", "type": "step_started", "step": "s03", "action": "click", "intent": "Submit the sign-on form with the entered credentials.", "target": "button \"Sign On\""}
+{"seq": 9, "ts": "2026-09-19T07:52:15.454745+00:00", "type": "policy", "step": "s03", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 10, "ts": "2026-09-19T07:52:15.724102+00:00", "type": "step_passed", "step": "s03", "strategy": "role"}
+{"seq": 11, "ts": "2026-09-19T07:52:15.724102+00:00", "type": "step_started", "step": "s04", "action": "click", "intent": "Open Member Inquiry to look up the member.", "target": "link \"Member Inquiry\""}
+{"seq": 12, "ts": "2026-09-19T07:52:15.744319+00:00", "type": "policy", "step": "s04", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 13, "ts": "2026-09-19T07:52:15.985521+00:00", "type": "step_passed", "step": "s04", "strategy": "role"}
+{"seq": 14, "ts": "2026-09-19T07:52:15.985521+00:00", "type": "step_started", "step": "s05", "action": "fill", "intent": "Enter the member number to look up the member.", "target": "textbox \"Member #:\""}
+{"seq": 15, "ts": "2026-09-19T07:52:15.985521+00:00", "type": "policy", "step": "s05", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 16, "ts": "2026-09-19T07:52:16.229743+00:00", "type": "step_passed", "step": "s05", "strategy": "label"}
+{"seq": 17, "ts": "2026-09-19T07:52:16.229743+00:00", "type": "step_started", "step": "s06", "action": "click", "intent": "Submit the member search for the entered member number.", "target": "button \"Search\""}
+{"seq": 18, "ts": "2026-09-19T07:52:16.232960+00:00", "type": "policy", "step": "s06", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 19, "ts": "2026-09-19T07:52:16.432315+00:00", "type": "state_detected", "step": "s06", "state": "maintenance_notice", "kind": "recoverable", "response": "dismiss", "attempt": 1}
+{"seq": 20, "ts": "2026-09-19T07:52:17.902740+00:00", "type": "step_passed", "step": "s06", "strategy": "role"}
+{"seq": 21, "ts": "2026-09-19T07:52:17.902740+00:00", "type": "step_started", "step": "s07", "action": "extract", "intent": "Read the Share Savings balance from the member's account table.", "target": "'Balance' of row 'Share Savings'"}
+{"seq": 22, "ts": "2026-09-19T07:52:17.906924+00:00", "type": "policy", "step": "s07", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 23, "ts": "2026-09-19T07:52:18.116808+00:00", "type": "step_passed", "step": "s07", "strategy": "table_cell"}
+{"seq": 24, "ts": "2026-09-19T07:52:18.116808+00:00", "type": "step_started", "step": "s08", "action": "extract", "intent": "Read the member's name from the member record.", "target": "value labelled 'Name:'"}
+{"seq": 25, "ts": "2026-09-19T07:52:18.116808+00:00", "type": "policy", "step": "s08", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 26, "ts": "2026-09-19T07:52:18.328187+00:00", "type": "step_passed", "step": "s08", "strategy": "label"}
+{"seq": 27, "ts": "2026-09-19T07:52:18.359632+00:00", "type": "run_finished", "run_id": "replay_20260919T075214_855d08", "capability": "harbor.member.savings_balance@v1", "status": "succeeded", "outputs": {"savings_balance": "\u2588\u2588\u2588\u258807", "member_name": "\u2588\u2588\u2588\u2588ry"}, "outcome": null, "error": null, "recoveries": [{"state_id": "maintenance_notice", "response": "dismiss", "step_id": "s06", "attempt": 1}], "degraded_locators": [], "handoffs": [], "dialogs": [], "steps_completed": 8, "duration_ms": 3313}

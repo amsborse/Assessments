@@ -1,0 +1,52 @@
+# `docker compose up --build` starts the demo target app and the service (catalog API +
+# operator console). Runs execute inside the app image, e.g.:
+#   docker compose run --rm app replay harbor.member.savings_balance --param member_id=12345
+services:
+  demo-bank:
+    build: .
+    image: assessments:local
+    command: ["demo-bank", "--host", "0.0.0.0", "--port", "8001"]
+    init: true
+    ports:
+      - "127.0.0.1:8001:8001"
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/', timeout=3)"]
+      interval: 10s
+      retries: 5
+
+  app:
+    image: assessments:local
+    depends_on:
+      demo-bank:
+        condition: service_healthy
+    init: true  # reap Chromium child processes
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Container-fixed values; everything else comes from .env.
+      HOST: 0.0.0.0
+      PORT: "8000"
+      DATA_DIR: /app/data
+      TARGET_BASE_URL: http://demo-bank:8001
+      ALLOWED_HOSTS: demo-bank
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - app-data:/app/data
+      - ./catalog:/app/catalog  # capability artifacts are reviewable files in the repo
+    shm_size: 1gb  # Chromium uses /dev/shm; Docker's 64MB default causes crashes
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/app
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    restart: unless-stopped
+
+volumes:
+  app-data:

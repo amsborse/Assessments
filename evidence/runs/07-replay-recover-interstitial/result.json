@@ -1,0 +1,24 @@
+{
+  "run_id": "replay_20260919T075214_855d08",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "succeeded",
+  "outputs": {
+    "savings_balance": "\u2588\u2588\u2588\u258807",
+    "member_name": "\u2588\u2588\u2588\u2588ry"
+  },
+  "outcome": null,
+  "error": null,
+  "recoveries": [
+    {
+      "state_id": "maintenance_notice",
+      "response": "dismiss",
+      "step_id": "s06",
+      "attempt": 1
+    }
+  ],
+  "degraded_locators": [],
+  "handoffs": [],
+  "dialogs": [],
+  "steps_completed": 8,
+  "duration_ms": 3313
+}

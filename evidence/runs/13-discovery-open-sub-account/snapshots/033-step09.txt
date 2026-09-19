@@ -1,0 +1,15 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+- link "Member Inquiry" [e1]
+- link "Teller Home" [e2]
+- link "Daily Reports" [e3]
+- link "Sign Off" [e4]
+== frame "main" /main/subaccount title="Open Sub-Account"
+| █████ |
+# Open Sub-Account - Member [redacted]
+- combobox "Product:" [e5] selected="[redacted]" options=["-- select --","Holiday Club","[redacted]","12-Month Share Certificate"]
+- textbox "Initial Deposit:" [e6] value=""
+- textbox "Funding Suffix:" [e7] value="S01"
+- button "Continue" [e8]

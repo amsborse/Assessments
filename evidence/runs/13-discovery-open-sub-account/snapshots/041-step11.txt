@@ -1,0 +1,18 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+- link "Member Inquiry" [e1]
+- link "Teller Home" [e2]
+- link "Daily Reports" [e3]
+- link "Sign Off" [e4]
+== frame "main" /main/subaccount/review title="Review Sub-Account"
+| Review Sub-Account |
+# Review Sub-Account
+| Member #: | █████ |
+| Product: | █████ |
+| Initial Deposit: | █████ |
+| Funding Suffix: | S01 |
+Press Confirm to open the sub-account. This transfer cannot be reversed.
+- button "Confirm" [e5]
+- link "Back" [e6]

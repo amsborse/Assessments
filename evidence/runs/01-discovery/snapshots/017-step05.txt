@@ -1,0 +1,16 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+- link "Member Inquiry" [e1]
+- link "Teller Home" [e2]
+- link "Daily Reports" [e3]
+- link "Sign Off" [e4]
+== frame "main" /main/inquiry title="Member Inquiry"
+| Member Inquiry |
+# Member Inquiry
+| Search Criteria |
+- textbox "Member #:" [e5] value=""
+- textbox "Last Name:" [e6] value=""
+- button "Search" [e7]
+- button "Clear" [e8]

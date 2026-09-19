@@ -1,0 +1,35 @@
+{"seq": 1, "ts": "2026-09-19T07:52:32.155684+00:00", "type": "run_started", "kind": "replay", "capability": "harbor.member.savings_balance@v1", "review": "draft", "params": ["member_id"]}
+{"seq": 2, "ts": "2026-09-19T07:52:32.178410+00:00", "type": "step_started", "step": "s01", "action": "fill", "intent": "Enter operator ID to sign on.", "target": "textbox \"Operator ID:\""}
+{"seq": 3, "ts": "2026-09-19T07:52:32.186359+00:00", "type": "policy", "step": "s01", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 4, "ts": "2026-09-19T07:52:32.372615+00:00", "type": "step_passed", "step": "s01", "strategy": "label"}
+{"seq": 5, "ts": "2026-09-19T07:52:32.372615+00:00", "type": "step_started", "step": "s02", "action": "fill", "intent": "Enter the operator password to sign on.", "target": "textbox \"Password:\""}
+{"seq": 6, "ts": "2026-09-19T07:52:32.372615+00:00", "type": "policy", "step": "s02", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 7, "ts": "2026-09-19T07:52:32.557834+00:00", "type": "step_passed", "step": "s02", "strategy": "label"}
+{"seq": 8, "ts": "2026-09-19T07:52:32.557834+00:00", "type": "step_started", "step": "s03", "action": "click", "intent": "Submit the sign-on form with the entered credentials.", "target": "button \"Sign On\""}
+{"seq": 9, "ts": "2026-09-19T07:52:32.557834+00:00", "type": "policy", "step": "s03", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 10, "ts": "2026-09-19T07:52:32.818781+00:00", "type": "step_passed", "step": "s03", "strategy": "role"}
+{"seq": 11, "ts": "2026-09-19T07:52:32.818781+00:00", "type": "step_started", "step": "s04", "action": "click", "intent": "Open Member Inquiry to look up the member.", "target": "link \"Member Inquiry\""}
+{"seq": 12, "ts": "2026-09-19T07:52:32.835380+00:00", "type": "policy", "step": "s04", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 13, "ts": "2026-09-19T07:52:33.093649+00:00", "type": "step_passed", "step": "s04", "strategy": "role"}
+{"seq": 14, "ts": "2026-09-19T07:52:33.093649+00:00", "type": "step_started", "step": "s05", "action": "fill", "intent": "Enter the member number to look up the member.", "target": "textbox \"Member #:\""}
+{"seq": 15, "ts": "2026-09-19T07:52:33.093649+00:00", "type": "policy", "step": "s05", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 16, "ts": "2026-09-19T07:52:33.312362+00:00", "type": "step_passed", "step": "s05", "strategy": "label"}
+{"seq": 17, "ts": "2026-09-19T07:52:33.312362+00:00", "type": "step_started", "step": "s06", "action": "click", "intent": "Submit the member search for the entered member number.", "target": "button \"Search\""}
+{"seq": 18, "ts": "2026-09-19T07:52:33.312362+00:00", "type": "policy", "step": "s06", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 19, "ts": "2026-09-19T07:52:33.555205+00:00", "type": "state_detected", "step": "s06", "state": "supervisor_override_required", "kind": "escalate", "response": "handoff", "attempt": 1}
+{"seq": 20, "ts": "2026-09-19T07:52:33.597863+00:00", "type": "intervention_raised", "id": "iv_c0e66f1c3a", "session_id": "replay_20260919T075231_fe4551", "run_id": "replay_20260919T075231_fe4551", "kind": "escalation", "reason": "Restricted (employee) record; a supervisor must enter an override.", "context": {"capability": "harbor.member.savings_balance@v1", "step": "s06", "intent": "Submit the member search for the entered member number.", "state": "supervisor_override_required", "screen": "http://127.0.0.1:60633/console"}, "screenshot": "screenshots/019-handoff-s06.jpg", "allowed_resolutions": ["resume", "skip_step", "abort"], "created_at": "2026-09-19T07:52:33.597863Z", "status": "open", "claimed_by": null, "claimed_at": null, "resolution": null, "human_actions": []}
+{"seq": 21, "ts": "2026-09-19T07:52:34.825423+00:00", "type": "intervention_claimed", "id": "iv_c0e66f1c3a", "operator": "operator.sim"}
+{"seq": 22, "ts": "2026-09-19T07:52:34.882516+00:00", "type": "human_action", "at": "2026-09-19T07:52:34.882516Z", "operator": "operator.sim", "source": "console", "kind": "click", "detail": {"x": 366, "y": 215}}
+{"seq": 23, "ts": "2026-09-19T07:52:34.890842+00:00", "type": "human_action", "at": "2026-09-19T07:52:34.890842Z", "operator": "operator.sim", "source": "console", "kind": "type", "detail": {"length": 5}}
+{"seq": 24, "ts": "2026-09-19T07:52:34.910508+00:00", "type": "human_action", "at": "2026-09-19T07:52:34.910508Z", "operator": "operator.sim", "source": "console", "kind": "click", "detail": {"x": 360, "y": 252}}
+{"seq": 25, "ts": "2026-09-19T07:52:34.913813+00:00", "type": "human_action", "at": "2026-09-19T07:52:34.913813Z", "operator": "operator.sim", "source": "console", "kind": "type", "detail": {"length": 4}}
+{"seq": 26, "ts": "2026-09-19T07:52:34.933536+00:00", "type": "human_action", "at": "2026-09-19T07:52:34.933536Z", "operator": "operator.sim", "source": "console", "kind": "click", "detail": {"x": 363, "y": 289}}
+{"seq": 27, "ts": "2026-09-19T07:52:35.958399+00:00", "type": "intervention_resolved", "id": "iv_c0e66f1c3a", "resolution": {"action": "resume", "operator": "operator.sim", "note": "supervisor override entered"}, "human_actions": 5}
+{"seq": 28, "ts": "2026-09-19T07:52:36.526685+00:00", "type": "step_passed", "step": "s06", "strategy": "role"}
+{"seq": 29, "ts": "2026-09-19T07:52:36.526685+00:00", "type": "step_started", "step": "s07", "action": "extract", "intent": "Read the Share Savings balance from the member's account table.", "target": "'Balance' of row 'Share Savings'"}
+{"seq": 30, "ts": "2026-09-19T07:52:36.534662+00:00", "type": "policy", "step": "s07", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 31, "ts": "2026-09-19T07:52:36.749675+00:00", "type": "step_passed", "step": "s07", "strategy": "table_cell"}
+{"seq": 32, "ts": "2026-09-19T07:52:36.749675+00:00", "type": "step_started", "step": "s08", "action": "extract", "intent": "Read the member's name from the member record.", "target": "value labelled 'Name:'"}
+{"seq": 33, "ts": "2026-09-19T07:52:36.751674+00:00", "type": "policy", "step": "s08", "verdict": "allow", "risk": "safe", "reason": "allowed"}
+{"seq": 34, "ts": "2026-09-19T07:52:36.959879+00:00", "type": "step_passed", "step": "s08", "strategy": "label"}
+{"seq": 35, "ts": "2026-09-19T07:52:36.984356+00:00", "type": "run_finished", "run_id": "replay_20260919T075231_fe4551", "capability": "harbor.member.savings_balance@v1", "status": "succeeded", "outputs": {"savings_balance": "\u2588\u2588\u2588\u258800", "member_name": "\u2588\u2588\u2588\u2588st"}, "outcome": null, "error": null, "recoveries": [], "degraded_locators": [], "handoffs": [{"intervention_id": "iv_c0e66f1c3a", "kind": "escalation", "reason": "Restricted (employee) record; a supervisor must enter an override.", "resolution": "resume", "operator": "operator.sim", "human_actions": 5}], "dialogs": [], "steps_completed": 8, "duration_ms": 4828}

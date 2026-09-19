@@ -1,0 +1,12 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+- link "Member Inquiry" [e1]
+- link "Teller Home" [e2]
+- link "Daily Reports" [e3]
+- link "Sign Off" [e4]
+== frame "main" /main/member title="Runtime Error"
+# Server Error in '/TellerConsole' Application.
+# Object reference not set to an instance of an object.
+# Exception Details:

@@ -1,0 +1,30 @@
+{
+  "id": "iv_9063c330e0",
+  "session_id": "replay_20260919T075354_1b4c84",
+  "run_id": "replay_20260919T075354_1b4c84",
+  "kind": "approval",
+  "reason": "Approval required: 'Confirm' is classified irreversible",
+  "context": {
+    "capability": "harbor.member.open_sub_account@v1",
+    "step": "s11",
+    "intent": "The review shows funding suffix S01 as requested, so confirm to open the sub-account as the task asks.",
+    "state": null,
+    "screen": "http://127.0.0.1:60633/console"
+  },
+  "screenshot": "screenshots/033-handoff-s11.jpg",
+  "allowed_resolutions": [
+    "approve",
+    "deny",
+    "abort"
+  ],
+  "created_at": "2026-09-19T07:53:57.661922Z",
+  "status": "resolved",
+  "claimed_by": "operator.sim",
+  "claimed_at": "2026-09-19T07:53:58.965189Z",
+  "resolution": {
+    "action": "approve",
+    "operator": "operator.sim",
+    "note": "reviewed request details"
+  },
+  "human_actions": []
+}

@@ -1,0 +1,7 @@
+Top window: /
+== frame "top" / title="Harbor CU - Sign On"
+| Harbor Community Credit Union - Teller Console v4.2 |
+# Harbor Community Credit Union - Teller Console v4.2
+- textbox "Operator ID:" [e1] value="█████"
+- textbox "Password:" [e2] value="█████"
+- button "Sign On" [e3]

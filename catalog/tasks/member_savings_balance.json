@@ -1,0 +1,37 @@
+{
+  "capability_id": "harbor.member.savings_balance",
+  "title": "Member savings balance lookup",
+  "goal": "Sign on to the teller console, look up member {{member_id}}, and read the current balance of their Share Savings account and the member's name.",
+  "app": {
+    "product": "harbor-teller-console",
+    "product_version": "4.2",
+    "surface": "legacy_web",
+    "profile": "harbor_teller"
+  },
+  "start_path": "/",
+  "inputs": {
+    "member_id": {
+      "type": "string",
+      "description": "Credit union member number (5-9 digits)",
+      "pattern": "^\\d{5,9}$",
+      "sensitivity": "pii"
+    }
+  },
+  "outputs": {
+    "savings_balance": {
+      "type": "money",
+      "description": "Current balance of the member's Share Savings account, as a decimal string",
+      "sensitivity": "internal"
+    },
+    "member_name": {
+      "type": "string",
+      "description": "Member's name as shown on the member record",
+      "sensitivity": "pii"
+    }
+  },
+  "secrets": {
+    "operator_id": {"description": "Teller operator ID for this tenant", "env": "HARBOR_OPERATOR_ID"},
+    "operator_password": {"description": "Teller operator password for this tenant", "env": "HARBOR_OPERATOR_PASSWORD"}
+  },
+  "max_steps": 20
+}

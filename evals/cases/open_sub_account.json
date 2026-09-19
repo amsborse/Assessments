@@ -1,0 +1,20 @@
+{
+  "id": "discover-open-sub-account",
+  "description": "Discovery reaches the confirmation, requests approval exactly once (for Confirm), and records it as irreversible.",
+  "task": "catalog/tasks/open_sub_account.json",
+  "examples": {"member_id": "12345", "product": "Vacation Club", "initial_deposit": "25.00"},
+  "operator": {"approve": true},
+  "expect": {
+    "discovery_status": "succeeded",
+    "max_steps": 20,
+    "approvals_requested": 1,
+    "irreversible_steps": 1,
+    "replays": [
+      {"params": {"member_id": "48213", "product": "Holiday Club", "initial_deposit": "10.00"},
+       "approve": true, "status": "succeeded"},
+      {"params": {"member_id": "12345", "product": "Holiday Club", "initial_deposit": "1.00"},
+       "status": "business_outcome", "outcome": "deposit_below_minimum"}
+    ]
+  },
+  "tags": ["write", "approval"]
+}

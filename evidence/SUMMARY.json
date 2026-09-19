@@ -1,0 +1,184 @@
+{
+  "discoveries": [
+    {
+      "scenario": "01-discovery",
+      "title": "Discover: member savings balance lookup",
+      "status": "succeeded",
+      "reason": "Signed on to the teller console and looked up the member number. Extracted the Share Savings (S01) current balance and the name from the member record. Nothing on the account was changed.",
+      "model": "claude-opus-5 (via Claude Code CLI)",
+      "steps": 8,
+      "artifact": "catalog/capabilities/harbor.member.savings_balance/v1.json"
+    },
+    {
+      "scenario": "13-discovery-open-sub-account",
+      "title": "Discover: open a sub-account (irreversible, approved by a person)",
+      "status": "succeeded",
+      "reason": "Signed on and looked up the member. Opened the requested sub-account with the initial deposit taken from Share Savings S01, then confirmed it. Read the confirmation number from the Sub-Account Opened screen and saved it as confirmation_number.",
+      "model": "claude-opus-5 (via Claude Code CLI)",
+      "steps": 12,
+      "artifact": "catalog/capabilities/harbor.member.open_sub_account/v1.json"
+    }
+  ],
+  "replays": [
+    {
+      "scenario": "02-replay-success",
+      "title": "Replay for the recorded member",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 1875
+    },
+    {
+      "scenario": "03-replay-other-member",
+      "title": "Replay for a member the model never saw",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 1905
+    },
+    {
+      "scenario": "04-replay-invalid-input",
+      "title": "Malformed member number is rejected up front",
+      "status": "rejected",
+      "outcome": null,
+      "error": "invalid_input",
+      "error_message": "member_id: must match ^\\d{5,9}$",
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 0
+    },
+    {
+      "scenario": "05-replay-not-found",
+      "title": "Unknown member is a business answer, not a crash",
+      "status": "business_outcome",
+      "outcome": "member_not_found",
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 1422
+    },
+    {
+      "scenario": "06-replay-fraud-alert-dialog",
+      "title": "Fraud-alert dialog stops disclosure",
+      "status": "business_outcome",
+      "outcome": "member_fraud_alert",
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 1405
+    },
+    {
+      "scenario": "07-replay-recover-interstitial",
+      "title": "Maintenance notice is acknowledged",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [
+        "maintenance_notice:dismiss"
+      ],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 3313
+    },
+    {
+      "scenario": "08-replay-recover-transient-503",
+      "title": "Transient host timeout is retried",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [
+        "host_unavailable:retry_step",
+        "host_unavailable:retry_step"
+      ],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 5780
+    },
+    {
+      "scenario": "09-replay-session-expired-restart",
+      "title": "Expired session restarts the flow",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [
+        "session_expired:restart"
+      ],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 4281
+    },
+    {
+      "scenario": "10-replay-hard-failure-app-error",
+      "title": "Application error page stops the run",
+      "status": "failed",
+      "outcome": null,
+      "error": "known_failure_state",
+      "error_message": "Unhandled server exception page.",
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [],
+      "duration_ms": 1671
+    },
+    {
+      "scenario": "11-replay-handoff-supervisor-override",
+      "title": "Supervisor override entered by a person",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [
+        "escalation:resume"
+      ],
+      "degraded_locators": [],
+      "duration_ms": 4828
+    },
+    {
+      "scenario": "12-replay-other-tenant-drift",
+      "title": "Same capability on a second credit union",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [],
+      "degraded_locators": [
+        "s04:css",
+        "s05:field_name",
+        "s06:css",
+        "s07:css"
+      ],
+      "duration_ms": 1875
+    },
+    {
+      "scenario": "14-replay-sub-account-approval",
+      "title": "Draft write capability waits for approval before committing",
+      "status": "succeeded",
+      "outcome": null,
+      "error": null,
+      "error_message": null,
+      "recoveries": [],
+      "handoffs": [
+        "approval:approve"
+      ],
+      "degraded_locators": [],
+      "duration_ms": 4468
+    }
+  ]
+}

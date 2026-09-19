@@ -1,0 +1,84 @@
+{
+  "id": "harbor_teller",
+  "product": "harbor-teller-console",
+  "description": "Harbor Teller Console v4.x (legacy frameset web app). Shared runtime states for all tenants.",
+  "redact_labels": ["Name:", "SSN:", "DOB:", "Phone:", "Address:", "Password:", "PIN:"],
+  "irreversible_controls": ["^confirm$", "^post( transaction)?$", "^submit transfer$", "^approve$", "^close account$", "^delete"],
+  "known_states": [
+    {
+      "id": "member_not_found",
+      "description": "Search returned no member for the given number.",
+      "kind": "business_outcome",
+      "when": [{"kind": "text_visible", "text": "No member found matching"}],
+      "response": "return_outcome"
+    },
+    {
+      "id": "invalid_member_number",
+      "description": "The application rejected the member number format.",
+      "kind": "business_outcome",
+      "when": [{"kind": "text_visible", "text": "Member number must be"}],
+      "response": "return_outcome"
+    },
+    {
+      "id": "member_fraud_alert",
+      "description": "Member has an active fraud alert; information must not be disclosed without ID verification.",
+      "kind": "business_outcome",
+      "when": [{"kind": "dialog", "message_regex": "(?i)fraud alert"}],
+      "response": "return_outcome"
+    },
+    {
+      "id": "maintenance_notice",
+      "description": "Informational system notice interstitial; acknowledge and continue.",
+      "kind": "recoverable",
+      "when": [{"kind": "text_visible", "text": "System Notice"}],
+      "response": "dismiss",
+      "target": {
+        "description": "Acknowledge button on the system notice",
+        "scope": {"frames": ["main"]},
+        "strategies": [
+          {"kind": "role", "role": "button", "name": "Acknowledge"},
+          {"kind": "text", "text": "Acknowledge", "element": "button"}
+        ]
+      },
+      "max_attempts": 2
+    },
+    {
+      "id": "host_unavailable",
+      "description": "Core host timed out (HCX-503). Transient: back off and retry the step.",
+      "kind": "recoverable",
+      "when": [{"kind": "text_visible", "text": "HCX-503"}],
+      "response": "retry_step",
+      "max_attempts": 3,
+      "backoff_ms": 1500
+    },
+    {
+      "id": "session_expired",
+      "description": "Operator session timed out. Safe to restart only for side-effect-free capabilities.",
+      "kind": "recoverable",
+      "when": [{"kind": "text_visible", "text": "session has expired"}],
+      "response": "restart",
+      "max_attempts": 1
+    },
+    {
+      "id": "supervisor_override_required",
+      "description": "Restricted (employee) record; a supervisor must enter an override.",
+      "kind": "escalate",
+      "when": [{"kind": "text_visible", "text": "Supervisor override required"}],
+      "response": "handoff"
+    },
+    {
+      "id": "invalid_operator_credentials",
+      "description": "Sign-on rejected: tenant credentials are wrong or locked. Configuration problem.",
+      "kind": "failure",
+      "when": [{"kind": "text_visible", "text": "Invalid operator ID or password"}],
+      "response": "fail"
+    },
+    {
+      "id": "application_error",
+      "description": "Unhandled server exception page.",
+      "kind": "failure",
+      "when": [{"kind": "text_visible", "text": "Server Error in"}],
+      "response": "fail"
+    }
+  ]
+}

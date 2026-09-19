@@ -1,0 +1,79 @@
+{
+  "id": "iv_c0e66f1c3a",
+  "session_id": "replay_20260919T075231_fe4551",
+  "run_id": "replay_20260919T075231_fe4551",
+  "kind": "escalation",
+  "reason": "Restricted (employee) record; a supervisor must enter an override.",
+  "context": {
+    "capability": "harbor.member.savings_balance@v1",
+    "step": "s06",
+    "intent": "Submit the member search for the entered member number.",
+    "state": "supervisor_override_required",
+    "screen": "http://127.0.0.1:60633/console"
+  },
+  "screenshot": "screenshots/019-handoff-s06.jpg",
+  "allowed_resolutions": [
+    "resume",
+    "skip_step",
+    "abort"
+  ],
+  "created_at": "2026-09-19T07:52:33.597863Z",
+  "status": "resolved",
+  "claimed_by": "operator.sim",
+  "claimed_at": "2026-09-19T07:52:34.825423Z",
+  "resolution": {
+    "action": "resume",
+    "operator": "operator.sim",
+    "note": "supervisor override entered"
+  },
+  "human_actions": [
+    {
+      "at": "2026-09-19T07:52:34.882516Z",
+      "operator": "operator.sim",
+      "source": "console",
+      "kind": "click",
+      "detail": {
+        "x": 366,
+        "y": 215
+      }
+    },
+    {
+      "at": "2026-09-19T07:52:34.890842Z",
+      "operator": "operator.sim",
+      "source": "console",
+      "kind": "type",
+      "detail": {
+        "length": 5
+      }
+    },
+    {
+      "at": "2026-09-19T07:52:34.910508Z",
+      "operator": "operator.sim",
+      "source": "console",
+      "kind": "click",
+      "detail": {
+        "x": 360,
+        "y": 252
+      }
+    },
+    {
+      "at": "2026-09-19T07:52:34.913813Z",
+      "operator": "operator.sim",
+      "source": "console",
+      "kind": "type",
+      "detail": {
+        "length": 4
+      }
+    },
+    {
+      "at": "2026-09-19T07:52:34.933536Z",
+      "operator": "operator.sim",
+      "source": "console",
+      "kind": "click",
+      "detail": {
+        "x": 363,
+        "y": 289
+      }
+    }
+  ]
+}

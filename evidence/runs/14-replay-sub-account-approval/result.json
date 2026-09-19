@@ -1,0 +1,25 @@
+{
+  "run_id": "replay_20260919T075354_1b4c84",
+  "capability": "harbor.member.open_sub_account@v1",
+  "status": "succeeded",
+  "outputs": {
+    "confirmation_number": "HC100232"
+  },
+  "outcome": null,
+  "error": null,
+  "recoveries": [],
+  "degraded_locators": [],
+  "handoffs": [
+    {
+      "intervention_id": "iv_9063c330e0",
+      "kind": "approval",
+      "reason": "Approval required: 'Confirm' is classified irreversible",
+      "resolution": "approve",
+      "operator": "operator.sim",
+      "human_actions": 0
+    }
+  ],
+  "dialogs": [],
+  "steps_completed": 12,
+  "duration_ms": 4468
+}

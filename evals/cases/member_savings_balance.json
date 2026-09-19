@@ -1,0 +1,16 @@
+{
+  "id": "discover-member-savings-balance",
+  "description": "Discovery produces a capability that replays correctly for members other than the example.",
+  "task": "catalog/tasks/member_savings_balance.json",
+  "examples": {"member_id": "12345"},
+  "expect": {
+    "discovery_status": "succeeded",
+    "max_steps": 15,
+    "must_not": ["policy_denied", "intervention_raised"],
+    "replays": [
+      {"params": {"member_id": "48213"}, "status": "succeeded", "outputs": {"savings_balance": "15032.90"}},
+      {"params": {"member_id": "99999"}, "status": "business_outcome", "outcome": "member_not_found"}
+    ]
+  },
+  "tags": ["read-only", "smoke"]
+}
