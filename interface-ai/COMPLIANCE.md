@@ -121,6 +121,6 @@ across many institutions on shared vendor cores. Overlays answer the many-instit
 (one reviewed artifact, per-tenant deltas); bounded repair is a fallback layer that never gives
 the model the keys (one step, policy-checked, proposed for review).
 
-Engineering: `mypy --strict`, 126 tests (93 unit/integration, 33 browser E2E) incl. regression
+Engineering: `mypy --strict`, 127 tests (94 unit/integration, 33 browser E2E) incl. regression
 tests for real bugs found, CI per folder, non-root read-only container (verified with
 `docker compose up` and a replay and a handoff through the containerised service), secret scanning.

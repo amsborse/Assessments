@@ -208,11 +208,19 @@ class {class_name}:
     def __init__(self, page: Page) -> None:
         self.page = page
 
-    def frame(self, *names: str) -> Frame:
-        frame = self.page.main_frame
-        for name in names:
-            frame = next(f for f in frame.child_frames if f.name == name and not f.is_detached())
-        return frame
+    def frame(self, *names: str, timeout_s: float = 10) -> Frame:
+        """The named (nested) frame, waiting for it to attach after a navigation."""
+        deadline = time.monotonic() + timeout_s
+        while True:
+            frame: Frame | None = self.page.main_frame
+            for name in names:
+                children = frame.child_frames if frame else []
+                frame = next((f for f in children if f.name == name and not f.is_detached()), None)
+            if frame is not None:
+                return frame
+            if time.monotonic() > deadline:
+                raise AssertionError(f"frame {{'/'.join(names)}} did not appear")
+            time.sleep(0.2)
 
 {methods}
 
