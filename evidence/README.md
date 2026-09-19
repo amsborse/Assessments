@@ -10,6 +10,7 @@ Everything was redacted before it was written: credentials and input values appe
 
 | Run | What it shows |
 | --- | --- |
+| [`demo.mp4`](demo.mp4) | Narrated screen recording of the operator console through the whole flow: discovery by Claude, replays, recovery, a person taking over the live session, tenant drift. Produced by `scripts/record_demo.py`. |
 | [`capability.json`](capability.json) | The artifact compiled from run 01 (`harbor.member.savings_balance@v1`). |
 | [`SUMMARY.json`](SUMMARY.json) | One entry per run: status, outcome/error, recoveries, handoffs, drift. |
 | `runs/01-discovery/` | **Real LLM discovery** (`claude-opus-5`): every observation, decision (tool, reason, timing), policy verdict and action in `events.jsonl`; what the model saw in `snapshots/`. |

@@ -12,8 +12,9 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from assessments.errors import AppError, NotFoundError
+from assessments.session.activity import summarize
 from assessments.session.control import ControlError, Resolution, ResolutionAction
-from assessments.session.runtime import REGISTRY, LiveSession
+from assessments.session.runtime import REGISTRY, FinishedSession, LiveSession
 
 router = APIRouter()
 _CONSOLE_HTML = (Path(__file__).parent / "operator.html").read_text(encoding="utf-8")
@@ -69,6 +70,22 @@ def _view(s: LiveSession) -> dict[str, Any]:
         "started_at": s.started_at,
         "intervention": iv.model_dump(mode="json") if iv else None,
         "resolved_interventions": len(s.control.history),
+        "finished": False,
+        "status": None,
+    }
+
+
+def _finished_view(f: FinishedSession) -> dict[str, Any]:
+    return {
+        "id": f.id,
+        "kind": f.kind,
+        "label": f.label,
+        "controller": "ended",
+        "started_at": f.started_at,
+        "ended_at": f.ended_at,
+        "intervention": None,
+        "finished": True,
+        "status": f.status,
     }
 
 
@@ -79,7 +96,20 @@ async def console() -> HTMLResponse:
 
 @router.get("/api/sessions")
 async def list_sessions() -> list[dict[str, Any]]:
-    return [_view(s) for s in REGISTRY.all()]
+    """Live sessions, then recently finished ones (newest first)."""
+    return [_view(s) for s in REGISTRY.all()] + [_finished_view(f) for f in REGISTRY.finished]
+
+
+@router.get("/api/sessions/{session_id}/activity")
+async def activity(session_id: str, after: int = 0) -> list[dict[str, Any]]:
+    """What the run has been doing, in plain language (from redacted events)."""
+    live = REGISTRY.get(session_id)
+    finished = REGISTRY.get_finished(session_id) if live is None else None
+    if live is None and finished is None:
+        raise NotFoundError(f"no session {session_id}")
+    events = list(live.recorder.recent) if live else finished.events  # type: ignore[union-attr]
+    items = (summarize(e) for e in events if int(e.get("seq", 0)) > after)
+    return [i for i in items if i is not None]
 
 
 @router.get("/api/sessions/{session_id}/screen")

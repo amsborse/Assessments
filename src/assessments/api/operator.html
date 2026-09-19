@@ -153,6 +153,18 @@
     margin: 0 0 16px; padding: 10px 14px; border-radius: 8px; font-size: 14px;
     background: #fdecea; color: #7a1a13; border: 1px solid #f1c2bd;
   }
+  /* activity feed + outcome colours (same palette as evidence/index.html) */
+  .feed { list-style: none; margin: 0; padding: 0; max-height: 380px; overflow: auto; font-size: 14px; }
+  .feed li { display: grid; grid-template-columns: 10px 1fr; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); }
+  .feed li:first-child { border-top: 0; }
+  .feed .pt { width: 8px; height: 8px; border-radius: 50%; margin-top: 7px; background: var(--t, #9fb0c2); }
+  .feed li[data-tone="success"] { --t: #1f7a4d; } .feed li[data-tone="recovered"] { --t: #b7791f; }
+  .feed li[data-tone="business"] { --t: #2459c9; } .feed li[data-tone="human"] { --t: #6d4bc4; }
+  .feed li[data-tone="danger"] { --t: #b3261e; } .feed li[data-tone="muted"] { --t: #64748b; }
+  .feed li[data-tone]:not([data-tone="info"]) span:last-child { color: var(--t); font-weight: 600; }
+  .feed-empty { color: var(--muted); font-size: 14px; margin: 0; }
+  .outcome { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 999px; font-weight: 600;
+    color: #fff; background: var(--c); }
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 </style>
 </head>
@@ -173,7 +185,7 @@
 
 <div class="shell">
   <nav class="queue" aria-label="Live sessions">
-    <h2>Live sessions</h2>
+    <h2>Sessions</h2>
     <div id="queue"></div>
   </nav>
   <main class="detail" id="detail" aria-live="polite"></main>
@@ -193,13 +205,21 @@ const RESOLUTIONS = {
   deny:      { text: "Deny this action", danger: true },
   abort:     { text: "Stop the run", danger: true },
 };
+const OUTCOMES = {
+  succeeded:        { label: "Succeeded",        color: "#1f7a4d" },
+  business_outcome: { label: "Business outcome", color: "#2459c9" },
+  failed:           { label: "Failed",           color: "#b3261e" },
+  rejected:         { label: "Rejected",         color: "#64748b" },
+  aborted:          { label: "Stopped",          color: "#64748b" },
+};
 const KIND = { stuck: "The agent is stuck", escalation: "Needs a person", approval: "Needs your approval" };
 
 const $ = (s, el = document) => el.querySelector(s);
 const wrapId = (t) => esc(t).replace(/([._@])/g, "$1<wbr>");
 const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const op = () => $("#op").value.trim();
-let sessions = [], selected = null, lastSig = "", error = "", screenTimer = null;
+let sessions = [], selected = null, pinned = false, lastSig = "", error = "";
+const feeds = {}; // session id -> {seq, items}
 
 async function api(path, body) {
   const r = await fetch(path, body
@@ -210,7 +230,13 @@ async function api(path, body) {
   return data;
 }
 
-function stateOf(s) { return STATES[s.controller] || STATES.ended; }
+function stateOf(s) {
+  if (s.finished) {
+    const o = OUTCOMES[s.status] || { label: "Ended", color: "var(--ended)" };
+    return { label: `Finished: ${o.label.toLowerCase()}`, short: o.label, color: o.color };
+  }
+  return STATES[s.controller] || STATES.ended;
+}
 function ago(iso) {
   const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
   return s < 60 ? `${Math.round(s)}s ago` : `${Math.round(s / 60)} min ago`;
@@ -219,17 +245,18 @@ function ago(iso) {
 function renderQueue() {
   const q = $("#queue");
   if (!sessions.length) {
-    q.innerHTML = '<p class="empty-queue">No live sessions. Runs appear here while they are working.</p>';
+    q.innerHTML = '<p class="empty-queue">No sessions yet. Runs appear here while they are working.</p>';
     return;
   }
   const order = { awaiting_human: 0, human: 1, automation: 2, ended: 3 };
-  const sorted = [...sessions].sort((a, b) => order[a.controller] - order[b.controller]);
+  const sorted = [...sessions].sort((a, b) => order[a.controller] - order[b.controller]
+    || new Date(b.started_at) - new Date(a.started_at));
   q.innerHTML = sorted.map((s) => {
     const st = stateOf(s);
     return `<button class="session" style="--c:${st.color}" data-id="${s.id}" aria-current="${s.id === selected}">
       <span class="strip"></span>
       <span><span class="title">${wrapId(s.label)}</span><br>
-        <span class="state">${st.short}</span><span class="meta">, ${s.kind} started ${ago(s.started_at)}</span></span>
+        <span class="state">${st.short}</span><span class="meta">, ${s.kind} ${s.finished ? `ended ${ago(s.ended_at)}` : `started ${ago(s.started_at)}`}</span></span>
     </button>`;
   }).join("");
 }
@@ -253,6 +280,17 @@ function renderDetail() {
     return;
   }
   const st = stateOf(s), iv = s.intervention, mine = iv && iv.claimed_by === op();
+  const feedPanel = `<section class="panel"><h2>${s.finished ? "What happened" : "Activity"}</h2>
+    <ol class="feed" id="feed"></ol></section>`;
+  if (s.finished) {
+    d.style.setProperty("--c", st.color);
+    d.innerHTML = `<div class="head"><div><h1>${s.kind === "discovery" ? "Discovery" : "Replay"} finished</h1>
+      <div class="sub">${wrapId(s.label)}, session ${esc(s.id)}</div>
+      <span class="outcome">${esc(st.short)}</span></div></div>
+      <div style="max-width:760px">${feedPanel}</div>`;
+    renderFeed();
+    return;
+  }
   const ctx = (iv && iv.context) || {};
   const facts = [
     ["Run", s.kind === "discovery" ? "Discovery" : "Replay"],
@@ -305,9 +343,32 @@ function renderDetail() {
         </section>
         <section class="panel">${actions}</section>
         ${actionsLog}
+        ${feedPanel}
       </aside>
     </div>`;
+  renderFeed();
   refreshScreen();
+}
+
+function renderFeed() {
+  const el = $("#feed"), f = feeds[selected];
+  if (!el) return;
+  if (!f || !f.items.length) { el.outerHTML = '<p class="feed-empty" id="feed">Waiting for the first step…</p>'; return; }
+  if (el.tagName !== "OL") { el.outerHTML = '<ol class="feed" id="feed"></ol>'; return renderFeed(); }
+  el.innerHTML = f.items.map((i) => `<li data-tone="${i.tone}"><span class="pt"></span><span>${esc(i.text)}</span></li>`).join("");
+  el.scrollTop = el.scrollHeight;
+}
+
+async function loadFeed() {
+  if (!selected) return;
+  const f = feeds[selected] || (feeds[selected] = { seq: 0, items: [] });
+  try {
+    const items = await api(`/api/sessions/${selected}/activity?after=${f.seq}`);
+    if (!items.length) return;
+    f.items.push(...items);
+    f.seq = Math.max(f.seq, ...items.map((i) => i.seq || 0));
+    renderFeed();
+  } catch { /* session gone; next poll re-selects */ }
 }
 
 function describe(a) {
@@ -337,15 +398,19 @@ async function poll() {
     $("#link").classList.add("down"); $("#link-text").textContent = "Disconnected";
     return;
   }
-  if (!sessions.some((s) => s.id === selected)) {
-    const needs = sessions.find((s) => s.controller === "awaiting_human") || sessions[0];
-    selected = needs ? needs.id : null;
+  if (!sessions.some((s) => s.id === selected)) pinned = false;
+  if (!pinned) {
+    // Follow what matters: a run waiting for a person, else the newest live run, else the latest result.
+    const live = sessions.filter((s) => !s.finished).sort((a, b) => new Date(b.started_at) - new Date(a.started_at));
+    const pick = sessions.find((s) => s.controller === "awaiting_human") || live[0] || sessions.find((s) => s.finished);
+    selected = pick ? pick.id : null;
   }
   renderQueue();
   const s = sessions.find((x) => x.id === selected);
-  const sig = JSON.stringify([selected, s && s.controller, s && s.intervention, error, op()]);
+  const sig = JSON.stringify([selected, s && s.controller, s && s.finished, s && s.intervention, error, op()]);
   const typing = document.activeElement && ["typed", "note"].includes(document.activeElement.id);
   if (sig !== lastSig && !typing) { lastSig = sig; renderDetail(); }
+  loadFeed();
 }
 
 async function act(fn) {
@@ -355,7 +420,7 @@ async function act(fn) {
 
 document.addEventListener("click", async (e) => {
   const sessionBtn = e.target.closest(".session");
-  if (sessionBtn) { selected = sessionBtn.dataset.id; error = ""; lastSig = ""; return poll(); }
+  if (sessionBtn) { selected = sessionBtn.dataset.id; pinned = true; error = ""; lastSig = ""; return poll(); }
   const s = sessions.find((x) => x.id === selected);
   const iv = s && s.intervention;
   if (e.target.id === "screen" && iv && iv.claimed_by === op()) {
@@ -391,7 +456,7 @@ document.addEventListener("submit", async (e) => {
 
 $("#op").addEventListener("change", () => { lastSig = ""; poll(); });
 poll();
-setInterval(poll, 1500);
+setInterval(poll, 1000);
 setInterval(refreshScreen, 1200);
 </script>
 </body>

@@ -35,3 +35,6 @@ evals/results/*
 Thumbs.db
 .idea/
 .vscode/
+
+# Demo recording: the committed format is evidence/demo.mp4
+evidence/demo.webm

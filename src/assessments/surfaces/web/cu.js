@@ -327,9 +327,10 @@
   }
 
   // ------------------------------------------------------------------ human action capture
-  // Only reports while the controller has set human mode; values are never sent, only lengths.
+  // Reports every user event; the Python side keeps it only while a person holds control.
+  // Values are never sent, only lengths.
   function report(kind, el, extra) {
-    if (!window.__cuHumanMode || typeof window.__cuHumanEvent !== "function") return;
+    if (typeof window.__cuHumanEvent !== "function") return;
     try { window.__cuHumanEvent({ kind, element: describeEl(el), ...extra }); } catch (e) { /* ignore */ }
   }
   document.addEventListener("click", (e) => {

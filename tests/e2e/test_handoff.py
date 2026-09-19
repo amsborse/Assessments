@@ -32,7 +32,7 @@ SUB_PARAMS = {"member_id": "12345", "product": "Vacation Club", "initial_deposit
 async def operator(settings: Settings, **kw: Any) -> AsyncIterator[SimulatedOperator]:
     transport = httpx.ASGITransport(app=create_app(settings))
     async with httpx.AsyncClient(transport=transport, base_url="http://console") as client:
-        sim = SimulatedOperator(client, think_s=0.1, **kw)
+        sim = SimulatedOperator(client, **{"think_s": 0.1, **kw})
         task = asyncio.create_task(sim.run())
         try:
             yield sim
@@ -67,6 +67,14 @@ async def test_restricted_record_escalates_and_human_override_resumes_same_sessi
     assert [a["kind"] for a in console] == ["click", "type", "click", "type", "click"]
     assert all("text" not in a["detail"] for a in console)  # typed values are never recorded
     assert "4321" not in json.dumps(iv)
+    # What the person did is also captured in the page, with the element they touched.
+    # Regression: the in-page recorder waited for a flag nothing set, so it never reported.
+    page = [a for a in iv["human_actions"] if a["source"] == "page"]
+    assert {"name": "Supervisor ID:", "length": 5} in [
+        {"name": a["detail"]["name"], "length": a["detail"]["length"]}
+        for a in page
+        if a["kind"] == "fill"
+    ]
 
 
 async def test_operator_abort_stops_the_run(settings: Settings) -> None:
@@ -166,3 +174,19 @@ def test_recorded_artifacts_contain_no_example_values(recorded_catalog: Path) ->
     assert "12345" not in blob
     assert "harbor-demo" not in blob
     assert "{{member_id}}" in blob or '"param": "member_id"' in blob
+
+
+async def test_resume_after_a_slow_human_gets_a_fresh_step_timeout(settings: Settings) -> None:
+    # Regression: the step deadline kept running during the handoff, so any person slower than the
+    # step timeout (10s) came back to an already-expired wait and the run failed at the checkpoint.
+    async with operator(settings, supervisor_id="sup01", supervisor_pin="4321", think_s=12):
+        result = await run_replay(
+            settings,
+            CAPABILITY,
+            {"member_id": "20417"},
+            base_url=settings.target_base_url,
+            headless=True,
+        )
+
+    assert result.status is ReplayStatus.SUCCEEDED, result.error
+    assert [h.resolution for h in result.handoffs] == ["resume"]

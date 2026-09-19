@@ -8,6 +8,7 @@ recorded: they embed unredacted DOM and network bodies.
 import json
 import logging
 import uuid
+from collections import deque
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,7 @@ class RunRecorder:
         (self.dir / "snapshots").mkdir(exist_ok=True)
         self._events = (self.dir / "events.jsonl").open("a", encoding="utf-8")
         self._seq = 0
+        self.recent: deque[dict[str, Any]] = deque(maxlen=400)  # for the live activity feed
         # Exact sensitive values (secrets, PII inputs). Shared with the surface, which masks
         # them in the page before screenshots are taken.
         self.sensitive: set[str] = set()
@@ -53,6 +55,7 @@ class RunRecorder:
         }
         self._events.write(json.dumps(record, default=str) + "\n")
         self._events.flush()
+        self.recent.append(record)
         logger.info(type_, extra={"event": record})
 
     def screenshot(self, name: str, jpeg: bytes) -> str:

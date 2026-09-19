@@ -57,7 +57,8 @@ resort. Invalid references (unknown params/secrets, outputs never extracted) fai
 ## 3. Determinism & error handling
 
 Replay never calls a model. Per step: **wait (bounded) for a unique target → policy → act →
-wait (bounded) for the checkpoint**, polling every 250 ms — condition-based, no fixed sleeps.
+wait (bounded) for the checkpoint**, polling every 250 ms — condition-based, no fixed sleeps. A
+handled state (dismissal, backoff, restart, a person's handoff) restarts the wait's budget.
 While waiting, the engine scans **known states** (curated per vendor product in the app profile,
 overridable per capability), each with a deliberate response:
 

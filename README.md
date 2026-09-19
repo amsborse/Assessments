@@ -9,6 +9,9 @@ session** from an operator console and hands control back.
 - Design write-up: [`REPORT.md`](REPORT.md)
 - Evidence (discovery + replays, incl. failures and a human handoff): [`evidence/`](evidence/)
 - Example artifact: [`evidence/capability.json`](evidence/capability.json)
+- **Video walkthrough (≈3 min):** [`evidence/demo.mp4`](evidence/demo.mp4) — Claude discovers the
+  flow, replays with outcomes and recovery, a person takes over the live session, and the same
+  capability runs on a second tenant.
 
 ## At a glance
 

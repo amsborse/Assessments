@@ -128,6 +128,9 @@ class ReplayEngine:
         )
         self.params: dict[str, str] = {}
         self._irreversible_done = False
+        # When a state was last handled (handoff, dismiss, retry, …). Waits restart their time
+        # budget from here: time spent with a person or backing off is not the step's fault.
+        self._handled_at = 0.0
 
     # ---------------------------------------------------------------- entry point
     async def run(self, raw_params: dict[str, Any]) -> ReplayResult:
@@ -261,12 +264,14 @@ class ReplayEngine:
 
     async def _await_target(self, step: Step) -> TargetResolution:
         target = _req(step.target)
-        deadline = time.monotonic() + step.timeout_ms / 1000
+        budget = step.timeout_ms / 1000
+        deadline = time.monotonic() + budget
         while True:
             resolution = await self.surface.resolve(target, self.params)
             if resolution.count == 1:
                 return resolution
             await self._scan_states(step)
+            deadline = max(deadline, self._handled_at + budget)
             if time.monotonic() > deadline:
                 raise _Terminal(
                     ReplayStatus.FAILED,
@@ -283,12 +288,14 @@ class ReplayEngine:
     async def _await_conditions(
         self, step: Step | None, conditions: list[Condition], wait: _Wait, timeout_ms: int
     ) -> None:
-        deadline = time.monotonic() + timeout_ms / 1000
+        budget = timeout_ms / 1000
+        deadline = time.monotonic() + budget
         while True:
             results = [await self.surface.check(c, self.params) for c in conditions]
             if all(results):
                 return
             await self._scan_states(step)
+            deadline = max(deadline, self._handled_at + budget)
             if time.monotonic() > deadline:
                 unmet = [_describe(c) for c, ok in zip(conditions, results, strict=True) if not ok]
                 where = f"after {step.id}" if step else "at end of flow"
@@ -410,7 +417,8 @@ class ReplayEngine:
     async def _scan_states(self, step: Step | None) -> None:
         state = await self._detect()
         if state is not None:
-            await self._handle(state, step)
+            await self._handle(state, step)  # raises for terminal states
+            self._handled_at = time.monotonic()
 
     async def _handle(self, state: KnownState, step: Step | None) -> None:
         self.attempts[state.id] = self.attempts.get(state.id, 0) + 1

@@ -46,7 +46,7 @@ select = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106"]  # assert and dummy secrets are fine in tests
 "src/demo_bank/**" = ["S105", "S608", "E501"]
-"scripts/evidence_dashboard.py" = ["E501"]  # HTML/CSS template  # synthetic creds; HTML/CSS templating, not SQL
+"scripts/{evidence_dashboard,record_demo}.py" = ["E501"]  # embedded HTML/CSS/JS templates  # synthetic creds; HTML/CSS templating, not SQL
 
 # ---------------------------------------------------------------- mypy
 [tool.mypy]

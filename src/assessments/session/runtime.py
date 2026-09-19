@@ -2,11 +2,13 @@
 (served from the same process) can see and take over exactly the session automation is using.
 """
 
+from collections import deque
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from playwright.async_api import async_playwright
 
@@ -27,9 +29,43 @@ class LiveSession:
     started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
+@dataclass
+class FinishedSession:
+    """A recently ended session, kept briefly so the console can show how it ended."""
+
+    id: str
+    kind: str
+    label: str
+    started_at: datetime
+    ended_at: datetime
+    status: str | None
+    events: list[dict[str, Any]]
+
+
 class SessionRegistry:
-    def __init__(self) -> None:
+    def __init__(self, keep_finished: int = 12) -> None:
         self._sessions: dict[str, LiveSession] = {}
+        self.finished: deque[FinishedSession] = deque(maxlen=keep_finished)
+
+    def finish(self, session: LiveSession) -> None:
+        from assessments.session.activity import run_status
+
+        events = list(session.recorder.recent)
+        self.finished.appendleft(
+            FinishedSession(
+                session.id,
+                session.kind,
+                session.label,
+                session.started_at,
+                datetime.now(UTC),
+                run_status(events),
+                events,
+            )
+        )
+        self.remove(session.id)
+
+    def get_finished(self, session_id: str) -> FinishedSession | None:
+        return next((f for f in self.finished if f.id == session_id), None)
 
     def add(self, session: LiveSession) -> None:
         self._sessions[session.id] = session
@@ -84,6 +120,6 @@ async def live_session(
             yield session
         finally:
             control.end()
-            registry.remove(session.id)
+            registry.finish(session)
             await browser.close()
             recorder.close()
