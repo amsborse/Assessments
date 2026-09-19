@@ -27,8 +27,8 @@ data/
 test-results/
 playwright-report/
 *.zip
-evals/results/*
-!evals/results/.gitkeep
+**/evals/results/*
+!**/evals/results/.gitkeep
 
 # OS / editor
 .DS_Store
@@ -37,4 +37,4 @@ Thumbs.db
 .vscode/
 
 # Demo recording: the committed format is evidence/demo.mp4
-evidence/demo.webm
+**/evidence/demo.webm

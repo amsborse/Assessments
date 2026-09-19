@@ -1,0 +1,63 @@
+{
+  "run_id": "replay_20260919T164502_c2d2ef",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "succeeded",
+  "outputs": {
+    "savings_balance": "\u2588\u2588\u2588\u258807",
+    "member_name": "\u2588\u2588\u2588\u2588ry"
+  },
+  "outcome": null,
+  "error": null,
+  "recoveries": [],
+  "degraded_locators": [
+    {
+      "step_id": "s04",
+      "target": "link \"Member Inquiry\"",
+      "used": "href",
+      "rank": 1,
+      "tried": [
+        "role=0",
+        "href=1"
+      ]
+    },
+    {
+      "step_id": "s05",
+      "target": "textbox \"Member #:\"",
+      "used": "field_name",
+      "rank": 1,
+      "tried": [
+        "label=0",
+        "field_name=1"
+      ]
+    },
+    {
+      "step_id": "s06",
+      "target": "button \"Search\"",
+      "used": "css",
+      "rank": 2,
+      "tried": [
+        "role=0",
+        "text=0",
+        "css=1"
+      ]
+    },
+    {
+      "step_id": "s07",
+      "target": "'Balance' of row 'Share Savings'",
+      "used": "css",
+      "rank": 1,
+      "tried": [
+        "table_cell=0",
+        "css=1"
+      ]
+    }
+  ],
+  "handoffs": [],
+  "dialogs": [],
+  "tenant": null,
+  "overlay": null,
+  "assisted_steps": [],
+  "proposed_targets": {},
+  "steps_completed": 8,
+  "duration_ms": 1921
+}

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Architecture: discovery compiles a capability; replay runs it without a model; people and agents on either side</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#5b6878"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #c9d3de; stroke-width: 1.5; }
+      .t { font-size: 15px; font-weight: 700; fill: #16202b; }
+      .s { font-size: 12.5px; fill: #5b6878; }
+      .lane { font-size: 12px; font-weight: 700; fill: #5b6878; letter-spacing: .02em; }
+      .ln { stroke: #5b6878; stroke-width: 1.6; fill: none; marker-end: url(#a); }
+      .dash { stroke-dasharray: 5 4; }
+    </style>
+  </defs>
+  <rect width="960" height="470" rx="14" fill="#eef2f5"/>
+
+  <!-- lanes -->
+  <text class="lane" x="28" y="34">ONCE, WITH A MODEL</text>
+  <text class="lane" x="520" y="34">EVERY TIME, DETERMINISTIC</text>
+  <line x1="496" y1="22" x2="496" y2="300" stroke="#c9d3de" stroke-dasharray="4 4"/>
+
+  <!-- discovery lane -->
+  <rect class="box" x="28" y="52" width="200" height="84" rx="10"/>
+  <text class="t" x="44" y="80">Task spec</text>
+  <text class="s" x="44" y="100">goal in plain language</text>
+  <text class="s" x="44" y="118">+ typed inputs / outputs</text>
+
+  <rect class="box" x="262" y="52" width="210" height="84" rx="10" style="stroke:#2459c9"/>
+  <text class="t" x="278" y="80">Discovery (Claude)</text>
+  <text class="s" x="278" y="100">observe → decide → act</text>
+  <text class="s" x="278" y="118">one tool call per step, with reason</text>
+
+  <!-- artifact -->
+  <rect class="box" x="262" y="176" width="210" height="104" rx="10" style="stroke:#1f7a4d;stroke-width:2"/>
+  <text class="t" x="278" y="204">Capability artifact</text>
+  <text class="s" x="278" y="224">verified multi-strategy targets</text>
+  <text class="s" x="278" y="242">checkpoints, outcomes, risk</text>
+  <text class="s" x="278" y="260">versioned JSON in git, reviewed</text>
+
+  <!-- replay lane -->
+  <rect class="box" x="520" y="176" width="200" height="104" rx="10" style="stroke:#1f7a4d"/>
+  <text class="t" x="536" y="204">Replay engine</text>
+  <text class="s" x="536" y="224">no model in the loop</text>
+  <text class="s" x="536" y="242">known states → outcome,</text>
+  <text class="s" x="536" y="260">recovery, handoff or failure</text>
+
+  <rect class="box" x="752" y="52" width="180" height="84" rx="10"/>
+  <text class="t" x="768" y="80">Calling agent</text>
+  <text class="s" x="768" y="100">REST or MCP tool call</text>
+  <text class="s" x="768" y="118">typed params in, result out</text>
+
+  <rect class="box" x="752" y="176" width="180" height="104" rx="10"/>
+  <text class="t" x="768" y="204">Confidence</text>
+  <text class="s" x="768" y="224">golden cases × N runs</text>
+  <text class="s" x="768" y="242">gates draft → approved</text>
+  <text class="s" x="768" y="260">tenant overlays from drift</text>
+
+  <!-- shared foundation -->
+  <rect class="box" x="28" y="328" width="444" height="112" rx="10"/>
+  <text class="t" x="44" y="356">Surface (Playwright, legacy web)</text>
+  <text class="s" x="44" y="376">accessibility-style snapshot of every frame, redacted screenshots</text>
+  <text class="s" x="44" y="394">the only technology-specific layer: a desktop (UIA) surface slots in here</text>
+  <text class="s" x="44" y="414">policy on every action; host allowlist enforced on the network too</text>
+
+  <rect class="box" x="520" y="328" width="412" height="112" rx="10" style="stroke:#6d4bc4"/>
+  <text class="t" x="536" y="356">Operator console + control model</text>
+  <text class="s" x="536" y="376">automation → waiting for a person → person → automation</text>
+  <text class="s" x="536" y="394">same live browser session; human actions recorded</text>
+  <text class="s" x="536" y="414">approval for irreversible steps</text>
+
+  <!-- arrows -->
+  <path class="ln" d="M228 94 H258"/>
+  <path class="ln" d="M367 136 V172"/>
+  <path class="ln" d="M472 228 H516"/>
+  <path class="ln" d="M720 228 H748"/>
+  <path class="ln" d="M842 136 V160 H660 V172"/>
+  <path class="ln dash" d="M620 280 V324"/>
+</svg>

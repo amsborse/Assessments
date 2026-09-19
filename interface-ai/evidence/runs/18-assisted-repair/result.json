@@ -1,0 +1,57 @@
+{
+  "run_id": "replay_20260919T164641_ed485e",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "succeeded",
+  "outputs": {
+    "savings_balance": "\u2588\u2588\u2588\u258807",
+    "member_name": "\u2588\u2588\u2588\u2588ry"
+  },
+  "outcome": null,
+  "error": null,
+  "recoveries": [],
+  "degraded_locators": [],
+  "handoffs": [],
+  "dialogs": [],
+  "tenant": null,
+  "overlay": null,
+  "assisted_steps": [
+    {
+      "step_id": "s04",
+      "model": "claude-opus-5 (via Claude Code CLI)",
+      "reason": "\"Find a Member\" is the nav link for looking up members, the same job the old \"Member Inquiry\" link did.",
+      "chose": "link \"Find a Member\""
+    }
+  ],
+  "proposed_targets": {
+    "s04": {
+      "description": "link \"Member Inquiry\"",
+      "scope": {
+        "frames": [
+          "nav"
+        ]
+      },
+      "strategies": [
+        {
+          "kind": "role",
+          "role": "link",
+          "name": "Find a Member"
+        },
+        {
+          "kind": "href",
+          "href": "/main/find"
+        },
+        {
+          "kind": "text",
+          "text": "Find a Member",
+          "element": "link"
+        },
+        {
+          "kind": "css",
+          "selector": "body > ul:nth-of-type(1) > li:nth-of-type(2) > a:nth-of-type(1)"
+        }
+      ]
+    }
+  },
+  "steps_completed": 8,
+  "duration_ms": 18015
+}

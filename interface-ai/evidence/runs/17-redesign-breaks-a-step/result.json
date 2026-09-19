@@ -1,0 +1,48 @@
+{
+  "run_id": "replay_20260919T164629_d1a634",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "failed",
+  "outputs": {},
+  "outcome": null,
+  "error": {
+    "code": "target_not_found",
+    "message": "link \"Member Inquiry\" not found within 10000ms",
+    "step_id": "s04",
+    "step_intent": "Open Member Inquiry to look up the member.",
+    "state_id": null,
+    "expected": [
+      "exactly one link \"Member Inquiry\""
+    ],
+    "observed": {
+      "frame_titles": {
+        "": "Harbor CU Teller Console",
+        "banner": "banner",
+        "nav": "nav",
+        "main": "Teller Home"
+      },
+      "screen_excerpt": "Top window: /console\n== frame \"banner\" /banner title=\"banner\"\n| Harbor Community CU | Branch 004 Drawer 12 |\n== frame \"nav\" /nav title=\"nav\"\nDashboard\n- link \"Dashboard\" [e1]\nFind a Member\n- link \"Find a Member\" [e2]\nTeller Home\n- link \"Teller Home\" [e3]\nDaily Reports\n- link \"Daily Reports\" [e4]\nSign Off\n- link \"Sign Off\" [e5]\n== frame \"main\" /main/welcome title=\"Teller Home\"\n| Teller Home |\n# Teller Home\n\u2588\u2588\u2588\u2588\u2588"
+    },
+    "evidence": {
+      "screenshot": "screenshots/011-failure.jpg",
+      "snapshot": "snapshots/011-failure.txt"
+    },
+    "details": {
+      "tried": [
+        "role=0",
+        "href=0",
+        "text=0",
+        "css=0"
+      ]
+    }
+  },
+  "recoveries": [],
+  "degraded_locators": [],
+  "handoffs": [],
+  "dialogs": [],
+  "tenant": null,
+  "overlay": null,
+  "assisted_steps": [],
+  "proposed_targets": {},
+  "steps_completed": 3,
+  "duration_ms": 11188
+}

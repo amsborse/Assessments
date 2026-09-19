@@ -1,0 +1,18 @@
+Top window: /console
+== frame "banner" /banner title="banner"
+| Harbor Community CU | Branch 004 Drawer 12 |
+== frame "nav" /nav title="nav"
+Dashboard
+- link "Dashboard" [e1]
+Find a Member
+- link "Find a Member" [e2]
+Teller Home
+- link "Teller Home" [e3]
+Daily Reports
+- link "Daily Reports" [e4]
+Sign Off
+- link "Sign Off" [e5]
+== frame "main" /main/welcome title="Teller Home"
+| Teller Home |
+# Teller Home
+█████

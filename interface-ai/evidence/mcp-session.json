@@ -1,0 +1,65 @@
+{
+  "tools": [
+    "list_capabilities",
+    "invoke_capability"
+  ],
+  "list_capabilities": {
+    "name": "harbor.member.open_sub_account",
+    "version": 1,
+    "title": "Open a sub-account for a member",
+    "description": "Sign on to the teller console, look up member {{member_id}}, open a new {{product}} sub-account funded with an initial deposit of {{initial_deposit}} from the member's Share Savings (suffix S01), confirm it, and read the confirmation number.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "type": "string",
+          "description": "Credit union member number (5-9 digits)",
+          "pattern": "^\\d{5,9}$"
+        },
+        "product": {
+          "type": "string",
+          "description": "Sub-account product to open",
+          "enum": [
+            "Holiday Club",
+            "Vacation Club",
+            "12-Month Share Certificate"
+          ]
+        },
+        "initial_deposit": {
+          "type": "string",
+          "description": "Initial deposit transferred from Share Savings, e.g. 25.00 (decimal, e.g. 25.00)"
+        }
+      },
+      "required": [
+        "member_id",
+        "product",
+        "initial_deposit"
+      ],
+      "additionalProperties": false
+    },
+    "outputs": {
+      "confirmation_number": {
+        "type": "string",
+        "description": "Confirmation number of the opened sub-account"
+      }
+    },
+    "business_outcomes": {
+      "deposit_below_minimum": "The initial deposit is below the product minimum ($5.00).",
+      "member_not_found": "Search returned no member for the given number.",
+      "invalid_member_number": "The application rejected the member number format.",
+      "member_fraud_alert": "Member has an active fraud alert; information must not be disclosed without ID verification."
+    },
+    "side_effects": "irreversible",
+    "review": "draft",
+    "confidence": null
+  },
+  "invoke_capability": {
+    "request": {
+      "name": "harbor.member.savings_balance",
+      "params": {
+        "member_id": "[redacted]"
+      }
+    },
+    "response_status": "succeeded"
+  }
+}

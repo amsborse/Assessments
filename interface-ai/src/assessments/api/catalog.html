@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capability Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #13233a; --paper: #eef2f5; --panel: #fff; --ink: #16202b; --muted: #5b6878;
+    --line: #d7dee6; --soft: #f5f7fa;
+    --succeeded: #1f7a4d; --recovered: #b7791f; --business: #2459c9; --person: #6d4bc4;
+    --failed: #b3261e; --stopped: #64748b;
+    --font: "Schibsted Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 var(--font); color: var(--ink); background: var(--paper); }
+  :focus-visible { outline: 3px solid var(--business); outline-offset: 2px; }
+  a { color: var(--business); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .topbar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 24px;
+    background: var(--navy); color: #fff; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+  .topbar nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+  .topbar nav a { color: #c6d2e2; text-decoration: none; }
+  .topbar nav a[aria-current="page"] { color: #fff; font-weight: 600; }
+
+  .shell { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: calc(100vh - 56px); }
+  @media (max-width: 960px) { .shell { grid-template-columns: 1fr; } }
+  .list { background: #f7f9fb; border-right: 1px solid var(--line); padding: 20px 14px; }
+  .list h2 { font-size: 15px; color: var(--muted); margin: 0 10px 12px; font-weight: 600; }
+  .cap-btn { display: block; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+    background: transparent; border: 1px solid transparent; border-radius: 10px; padding: 12px; margin-bottom: 6px; }
+  .cap-btn:hover { background: #fff; border-color: var(--line); }
+  .cap-btn[aria-current="true"] { background: #fff; border-color: #b9c6d4; }
+  .cap-btn b { display: block; }
+  .cap-btn small { color: var(--muted); overflow-wrap: anywhere; }
+
+  main { padding: 28px 32px 56px; min-width: 0; max-width: 1280px; }
+  @media (max-width: 720px) { main { padding: 20px 16px 40px; } }
+  .head h1 { margin: 0; font-size: 26px; line-height: 1.2; }
+  .head .ref { color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+  .head p { max-width: 80ch; margin: 10px 0 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; color: var(--c, var(--muted));
+    background: color-mix(in srgb, var(--c, #64748b) 10%, white);
+    border: 1px solid color-mix(in srgb, var(--c, #64748b) 30%, white); }
+
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; min-width: 0; }
+  .panel h2 { font-size: 16px; margin: 0 0 12px; }
+  .panel h3 { font-size: 13px; color: var(--muted); font-weight: 600; margin: 14px 0 6px; }
+  .kv { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .kv li { display: grid; gap: 2px; }
+  .kv code { font-size: 13px; font-weight: 600; color: var(--ink); background: none;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  .kv .t { font-size: 12.5px; color: var(--muted); }
+  .muted { color: var(--muted); }
+
+  .gauge { display: flex; align-items: center; gap: 16px; }
+  .gauge svg { flex: none; }
+  .gauge .big { font-size: 30px; font-weight: 700; line-height: 1; }
+  .bars { display: grid; gap: 8px; margin-top: 14px; font-size: 13.5px; }
+  .bar { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+  .bar .track { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: #e6ebf0; overflow: hidden; }
+  .bar .fill { height: 100%; background: var(--c, var(--succeeded)); }
+
+  .states { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+  .state { border-left: 4px solid var(--c); background: var(--soft); border-radius: 8px; padding: 10px 12px; }
+  .state b { display: block; font-size: 14px; overflow-wrap: anywhere; }
+  .state span { font-size: 13px; color: var(--muted); }
+
+  .flow { list-style: none; margin: 0; padding: 0; position: relative; }
+  .flow::before { content: ""; position: absolute; left: 17px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .step { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; padding: 10px 0; }
+  .dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; z-index: 1;
+    background: #fff; border: 2px solid var(--line); font-size: 12px; font-weight: 700; color: var(--muted); }
+  .step.risky .dot { border-color: var(--failed); color: var(--failed); }
+  .step.extract .dot { border-color: var(--succeeded); color: var(--succeeded); }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+  .step.risky .card { border-color: color-mix(in srgb, var(--failed) 45%, white); }
+  .card .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+  .verb { font-weight: 700; text-transform: capitalize; }
+  .what { overflow-wrap: anywhere; }
+  .intent { color: var(--muted); font-size: 14px; margin: 2px 0 8px; }
+  .strats { display: flex; flex-wrap: wrap; gap: 6px; }
+  .strat { font-size: 12.5px; padding: 2px 8px; border-radius: 6px; background: #eef3f8; color: #23364d;
+    border: 1px solid #d8e2ec; overflow-wrap: anywhere; }
+  .strat i { font-style: normal; font-weight: 700; margin-right: 4px; color: var(--business); }
+  .strat.css { background: #f6f6f6; color: var(--muted); border-style: dashed; }
+  .expect { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .val { font-size: 12.5px; font-weight: 600; padding: 1px 7px; border-radius: 6px; background: #f1ecfb; color: #4b2f94; }
+  .val.secret { background: #fbecea; color: #8a211a; }
+  details { margin-top: 24px; }
+  summary { cursor: pointer; color: var(--business); font-weight: 600; }
+  pre { background: #0f1b2d; color: #d7e3f4; padding: 16px; border-radius: 10px; overflow: auto; font-size: 12.5px; max-height: 520px; }
+  .section-title { font-size: 18px; margin: 32px 0 12px; }
+  .empty { color: var(--muted); padding: 40px 0; }
+  @media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width .6s ease; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2" fill="#fff"/><rect x="15" y="3" width="8" height="8" rx="2" fill="#fff" opacity=".6"/><rect x="3" y="15" width="8" height="8" rx="2" fill="#fff" opacity=".6"/><rect x="15" y="15" width="8" height="8" rx="2" fill="#fff"/></svg>
+    Capability Catalog
+  </div>
+  <nav aria-label="Service"><a href="/catalog" aria-current="page">Catalog</a><a href="/operator">Operator console</a><a href="/docs">API</a></nav>
+</header>
+<div class="shell">
+  <aside class="list" aria-label="Capabilities"><h2>Capabilities</h2><div id="caps"></div></aside>
+  <main id="main"><p class="empty">Loading…</p></main>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const KIND = {
+  business_outcome: ["Business outcome", "var(--business)"], recoverable: ["Recoverable", "var(--recovered)"],
+  escalate: ["Needs a person", "var(--person)"], failure: ["Failure", "var(--failed)"],
+};
+let caps = [], current = null;
+
+async function get(url) { const r = await fetch(url); if (!r.ok) throw new Error(url); return r.json(); }
+
+function strat(s) {
+  const t = {
+    role: () => `${esc(s.role)} “${esc(s.name)}”`, label: () => `label “${esc(s.label)}”`,
+    field_name: () => `field <code>${esc(s.name)}</code>`, href: () => `link to ${esc(s.href)}`,
+    table_cell: () => `cell ${esc(s.row_key)} × ${esc(s.column)}`, text: () => `text “${esc(s.text)}”`,
+    css: () => "structural path (last resort)",
+  }[s.kind];
+  return t ? t() : esc(s.kind);
+}
+
+function value(v) {
+  if (!v) return "";
+  if (v.param) return `<span class="val">{{${esc(v.param)}}}</span>`;
+  if (v.secret) return `<span class="val secret">secret: ${esc(v.secret)}</span>`;
+  return `<span class="val">${esc(v.literal)}</span>`;
+}
+
+function expectText(c) {
+  if (c.kind === "screen_title") return `screen “${esc(c.title)}”${c.scope && c.scope.frames.length ? ` in ${esc(c.scope.frames.join("/"))}` : ""}`;
+  if (c.kind === "text_visible") return `text “${esc(c.text)}” visible`;
+  if (c.kind === "target_present") return `${esc(c.target.description)} present`;
+  return esc(c.kind);
+}
+
+function gauge(conf) {
+  const v = conf == null ? 0 : conf, r = 30, circ = 2 * Math.PI * r;
+  const color = conf == null ? "#9fb0c2" : v >= 0.95 ? "var(--succeeded)" : v >= 0.8 ? "var(--recovered)" : "var(--failed)";
+  return `<svg width="76" height="76" viewBox="0 0 76 76" role="img" aria-label="Confidence ${conf == null ? "not measured" : Math.round(v * 100) + "%"}">
+    <circle cx="38" cy="38" r="${r}" fill="none" stroke="#e6ebf0" stroke-width="8"/>
+    <circle cx="38" cy="38" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round"
+      stroke-dasharray="${circ * v} ${circ}" transform="rotate(-90 38 38)"/></svg>`;
+}
+
+function bar(label, v, color) {
+  return `<div class="bar" style="--c:${color}"><span>${label}</span><b class="num">${Math.round(v * 100)}%</b>
+    <div class="track"><div class="fill" style="width:${v * 100}%"></div></div></div>`;
+}
+
+function renderList() {
+  $("#caps").innerHTML = caps.map((c) => `<button class="cap-btn" data-ref="${esc(c.name)}" aria-current="${c.name === current}">
+    <b>${esc(c.title)}</b><small>${esc(c.name)}@v${c.version}, ${esc(c.review)}</small></button>`).join("")
+    || '<p class="muted">No capabilities yet. Run a discovery first.</p>';
+}
+
+async function show(name) {
+  current = name; renderList();
+  const v = await get(`/api/capabilities/${encodeURIComponent(name)}/view`);
+  const cap = v.capability, con = v.contract, cert = v.certification;
+  const inputs = Object.entries(cap.inputs || {}).map(([k, p]) => `<li><code>${esc(k)}</code>
+    <span class="t">${esc(p.type)}${p.pattern ? `, pattern ${esc(p.pattern)}` : ""}${p.enum ? `, one of ${esc(p.enum.join(", "))}` : ""}, ${esc(p.sensitivity)}</span>
+    <span>${esc(p.description)}</span></li>`).join("");
+  const outputs = Object.entries(cap.outputs || {}).map(([k, o]) => `<li><code>${esc(k)}</code>
+    <span class="t">${esc(o.type)}, ${esc(o.sensitivity)}</span><span>${esc(o.description)}</span></li>`).join("");
+  const certHtml = cert ? `<div class="gauge">${gauge(cert.confidence)}<div><div class="big num">${Math.round(cert.confidence * 100)}%</div>
+      <div class="muted">${cert.eligible_for_approval ? "Eligible for unattended use" : "Not yet eligible for approval"}</div></div></div>
+      <div class="bars">${bar("Golden cases passed", cert.pass_rate, "var(--succeeded)")}
+      ${bar("Found by primary locator", cert.primary_locator_rate, "var(--business)")}</div>
+      <p class="muted" style="margin:12px 0 0;font-size:13.5px">${cert.runs_per_case} run${cert.runs_per_case === 1 ? "" : "s"} per case, p50 ${(cert.p50_ms / 1000).toFixed(1)}s, p95 ${(cert.p95_ms / 1000).toFixed(1)}s
+      ${cert.fragile_steps.length ? `<br>Single-strategy steps: ${esc(cert.fragile_steps.join(", "))}` : ""}</p>`
+    : `<div class="gauge">${gauge(null)}<div><div class="big">—</div><div class="muted">Not certified yet. Run <code>assessments certify ${esc(cap.id)}</code>.</div></div></div>`;
+  const tenants = v.tenants.length ? `<ul class="kv">${v.tenants.map((t) => `<li><b>${esc(t.name)}</b>
+      <span class="t">${t.overlay ? `overlay ${esc(t.overlay.status)}, steps ${esc(t.overlay.steps.join(", "))}` : "shared artifact, no overlay"}</span></li>`).join("")}</ul>`
+    : '<p class="muted">No tenants configured for this product.</p>';
+  const states = v.states.map((s) => { const [label, color] = KIND[s.kind] || [s.kind, "var(--stopped)"];
+    return `<div class="state" style="--c:${color}"><b>${esc(s.id)}</b><span>${label} → ${esc(s.response.replace("_", " "))}. ${esc(s.description)}</span></div>`; }).join("");
+  const steps = cap.steps.map((s, i) => {
+    const t = s.target, risky = s.risk === "irreversible";
+    return `<li class="step ${risky ? "risky" : ""} ${s.action === "extract" ? "extract" : ""}">
+      <span class="dot num">${i + 1}</span>
+      <div class="card"><div class="top"><span class="verb">${esc(s.action)}</span>
+        <span class="what">${t ? esc(t.description) : esc(s.key || s.url || "")}</span> ${value(s.value)}
+        ${s.output ? `<span class="chip" style="--c:var(--succeeded)">→ ${esc(s.output)}</span>` : ""}
+        ${risky ? '<span class="chip" style="--c:var(--failed)">Irreversible: needs approval</span>' : ""}</div>
+        <div class="intent">${esc(s.intent)}</div>
+        ${t ? `<div class="strats" aria-label="Locator strategies, most robust first">${t.strategies.map((x, j) => `<span class="strat ${x.kind === "css" ? "css" : ""}"><i>${j + 1}</i>${strat(x)}</span>`).join("")}</div>` : ""}
+        ${s.expect && s.expect.length ? `<div class="expect">Checkpoint: ${s.expect.map(expectText).join("; ")}</div>` : ""}
+      </div></li>`;
+  }).join("");
+  $("#main").innerHTML = `
+    <div class="head"><h1>${esc(cap.title)}</h1><div class="ref">${esc(cap.id)}@v${cap.version}, schema ${esc(cap.schema_version)}, recorded by ${esc(cap.provenance.model)}</div>
+      <p>${esc(cap.description)}</p>
+      <div class="chips"><span class="chip" style="--c:${cap.review.status === "approved" ? "var(--succeeded)" : "var(--recovered)"}">${esc(cap.review.status)}</span>
+        <span class="chip" style="--c:${con.side_effects === "irreversible" ? "var(--failed)" : "var(--succeeded)"}">${con.side_effects === "irreversible" ? "Changes the system of record" : "Read-only"}</span>
+        <span class="chip">${esc(cap.app.product)} ${esc(cap.app.product_version)}</span><span class="chip">${esc(cap.steps.length)} steps</span></div></div>
+    <div class="grid">
+      <section class="panel"><h2>Contract</h2><h3>Inputs</h3><ul class="kv">${inputs || '<li class="muted">None</li>'}</ul><h3>Outputs</h3><ul class="kv">${outputs || '<li class="muted">None</li>'}</ul></section>
+      <section class="panel"><h2>Confidence</h2>${certHtml}</section>
+      <section class="panel"><h2>Tenants</h2>${tenants}</section>
+    </div>
+    <h2 class="section-title">What callers can get back</h2><div class="states">${states}</div>
+    <h2 class="section-title">Recorded flow</h2>
+    <p class="muted" style="margin-top:-6px">Each step lists how its control is found, most robust first. Every strategy was verified to resolve to the element the model acted on.</p>
+    <ol class="flow">${steps}</ol>
+    <details><summary>Raw artifact (capability/1 JSON)</summary><pre>${esc(JSON.stringify(cap, null, 2))}</pre></details>`;
+}
+
+document.addEventListener("click", (e) => { const b = e.target.closest(".cap-btn"); if (b) show(b.dataset.ref); });
+(async () => {
+  try {
+    caps = await get("/api/capabilities");
+    const wanted = new URLSearchParams(location.search).get("c");
+    renderList();
+    if (caps.length) show(wanted && caps.some((c) => c.name === wanted) ? wanted : caps[0].name);
+    else $("#main").innerHTML = '<p class="empty">No capabilities yet. Run a discovery to record one.</p>';
+  } catch { $("#main").innerHTML = '<p class="empty">Could not load the catalog.</p>'; }
+})();
+</script>
+</body>
+</html>

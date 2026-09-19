@@ -1,0 +1,21 @@
+{
+  "run_id": "replay_20260919T164431_ddcea5",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "succeeded",
+  "outputs": {
+    "savings_balance": "\u2588\u2588\u2588\u258807",
+    "member_name": "\u2588\u2588\u2588\u2588ry"
+  },
+  "outcome": null,
+  "error": null,
+  "recoveries": [],
+  "degraded_locators": [],
+  "handoffs": [],
+  "dialogs": [],
+  "tenant": null,
+  "overlay": null,
+  "assisted_steps": [],
+  "proposed_targets": {},
+  "steps_completed": 8,
+  "duration_ms": 1906
+}

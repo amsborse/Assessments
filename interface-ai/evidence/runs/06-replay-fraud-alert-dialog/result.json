@@ -1,0 +1,24 @@
+{
+  "run_id": "replay_20260919T164438_8f639b",
+  "capability": "harbor.member.savings_balance@v1",
+  "status": "business_outcome",
+  "outputs": {},
+  "outcome": {
+    "code": "member_fraud_alert",
+    "description": "Member has an active fraud alert; information must not be disclosed without ID verification.",
+    "step_id": "s06"
+  },
+  "error": null,
+  "recoveries": [],
+  "degraded_locators": [],
+  "handoffs": [],
+  "dialogs": [
+    "Member has an active fraud alert. Verify photo ID before disclosing information. Continue?"
+  ],
+  "tenant": null,
+  "overlay": null,
+  "assisted_steps": [],
+  "proposed_targets": {},
+  "steps_completed": 5,
+  "duration_ms": 1421
+}

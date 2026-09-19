@@ -1,0 +1,115 @@
+{
+  "schema_version": "overlay/1",
+  "tenant": "bayside",
+  "capability": "harbor.member.savings_balance",
+  "base_version": 1,
+  "targets": {
+    "s04": {
+      "description": "link \"Member Inquiry\"",
+      "scope": {
+        "frames": [
+          "nav"
+        ]
+      },
+      "strategies": [
+        {
+          "kind": "role",
+          "role": "link",
+          "name": "Member Lookup"
+        },
+        {
+          "kind": "href",
+          "href": "/main/inquiry"
+        },
+        {
+          "kind": "text",
+          "text": "Member Lookup",
+          "element": "link"
+        },
+        {
+          "kind": "css",
+          "selector": "body > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(1) > a:nth-of-type(1)"
+        }
+      ]
+    },
+    "s05": {
+      "description": "textbox \"Member #:\"",
+      "scope": {
+        "frames": [
+          "main"
+        ]
+      },
+      "strategies": [
+        {
+          "kind": "label",
+          "label": "Member Number:"
+        },
+        {
+          "kind": "field_name",
+          "name": "mbrno"
+        },
+        {
+          "kind": "css",
+          "selector": "body > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > input:nth-of-type(1)"
+        }
+      ]
+    },
+    "s06": {
+      "description": "button \"Search\"",
+      "scope": {
+        "frames": [
+          "main"
+        ]
+      },
+      "strategies": [
+        {
+          "kind": "role",
+          "role": "button",
+          "name": "Find"
+        },
+        {
+          "kind": "text",
+          "text": "Find",
+          "element": "button"
+        },
+        {
+          "kind": "css",
+          "selector": "body > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(4) > td:nth-of-type(2) > input:nth-of-type(1)"
+        }
+      ]
+    },
+    "s07": {
+      "description": "'Balance' of row 'Share Savings'",
+      "scope": {
+        "frames": [
+          "main"
+        ]
+      },
+      "strategies": [
+        {
+          "kind": "label",
+          "label": "Share Savings"
+        },
+        {
+          "kind": "table_cell",
+          "row_key": "Share Savings",
+          "column": "Current Balance"
+        },
+        {
+          "kind": "css",
+          "selector": "body > table:nth-of-type(3) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(3)"
+        }
+      ]
+    }
+  },
+  "review": {
+    "status": "approved",
+    "reviewed_by": "operator.sim (evidence script)",
+    "reviewed_at": "2026-09-19T16:46:26.971032Z"
+  },
+  "provenance": {
+    "proposed_from_run": "replay_20260919T164624_cf0cce",
+    "proposed_at": "2026-09-19T16:46:26.962317Z",
+    "reason": "steps resolved only via fallback strategies: s04, s05, s06, s07"
+  }
+}

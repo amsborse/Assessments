@@ -1,0 +1,39 @@
+{
+  "capability": "harbor.member.savings_balance@v1",
+  "certified_at": "2026-09-19T16:47:35.845600Z",
+  "tenant": null,
+  "runs_per_case": 5,
+  "cases": [
+    {
+      "name": "recorded member",
+      "runs": 5,
+      "passed": 5,
+      "failures": []
+    },
+    {
+      "name": "unseen member",
+      "runs": 5,
+      "passed": 5,
+      "failures": []
+    },
+    {
+      "name": "unknown member",
+      "runs": 5,
+      "passed": 5,
+      "failures": []
+    },
+    {
+      "name": "malformed input",
+      "runs": 5,
+      "passed": 5,
+      "failures": []
+    }
+  ],
+  "pass_rate": 1.0,
+  "primary_locator_rate": 1.0,
+  "fragile_steps": [],
+  "p50_ms": 1593,
+  "p95_ms": 1921,
+  "confidence": 1.0,
+  "eligible_for_approval": true
+}

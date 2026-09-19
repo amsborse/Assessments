@@ -1,0 +1,84 @@
+[project]
+name = "assessments"
+version = "0.1.0"
+description = "Computer-use agent for legacy web applications"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "anthropic>=1.7.0",
+    "fastapi>=0.141.1",
+    "mcp>=2.2.0",
+    "playwright>=1.63.0",
+    "pydantic>=2.13.5",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.3",
+    "python-multipart>=0.0.32",
+    "uvicorn[standard]>=0.53.0",
+]
+
+[project.scripts]
+assessments = "assessments.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/assessments", "src/demo_bank"]
+
+# ---------------------------------------------------------------- ruff
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = ["docs/generated"]  # sample output of `assessments codegen`
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F",  # pycodestyle, pyflakes
+  "I",            # isort
+  "B",            # bugbear
+  "UP",           # pyupgrade
+  "SIM",          # simplify
+  "S",            # bandit (security)
+  "PT",           # pytest style
+  "RUF",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]  # assert and dummy secrets are fine in tests
+"src/demo_bank/**" = ["S105", "S608", "E501"]
+"scripts/{evidence_dashboard,record_demo}.py" = ["E501"]  # embedded HTML/CSS/JS templates
+"src/assessments/capability/codegen.py" = ["E501"]  # generated-code template  # synthetic creds; HTML/CSS templating, not SQL
+
+# ---------------------------------------------------------------- mypy
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src"
+plugins = ["pydantic.mypy"]
+
+# ---------------------------------------------------------------- pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers -m 'not e2e'"
+markers = ["e2e: end-to-end tests with a real server and browser (run via `make test-e2e`)"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+  "error",
+  # Upstream (starlette.testclient) deprecation; not actionable here.
+  "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.0",
+    "mypy>=2.3.1",
+    "pip-audit>=2.10.1",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-playwright>=0.9.0",
+    "ruff>=0.16.8",
+]

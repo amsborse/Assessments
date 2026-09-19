@@ -1,0 +1,14 @@
+{
+  "capability": "harbor.member.savings_balance",
+  "description": "Golden cases: every outcome class the capability promises its callers.",
+  "cases": [
+    {"name": "recorded member", "params": {"member_id": "12345"},
+     "expect": {"status": "succeeded", "outputs": {"savings_balance": "2418.07"}}},
+    {"name": "unseen member", "params": {"member_id": "48213"},
+     "expect": {"status": "succeeded", "outputs": {"savings_balance": "15032.90"}}},
+    {"name": "unknown member", "params": {"member_id": "99999"},
+     "expect": {"status": "business_outcome", "outcome": "member_not_found"}},
+    {"name": "malformed input", "params": {"member_id": "12ab"},
+     "expect": {"status": "rejected"}}
+  ]
+}

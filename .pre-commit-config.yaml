@@ -1,5 +1,5 @@
 # Install once with `make install` (runs `pre-commit install`).
-exclude: ^evidence/  # generated run evidence is kept byte-exact
+exclude: (^|/)evidence/  # generated run evidence is kept byte-exact
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -19,6 +19,6 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.8  # keep in sync with the ruff version in uv.lock
     hooks:
-      - id: ruff-format
+      - id: ruff-format  # the hooks already pass --force-exclude, so pyproject excludes apply
       - id: ruff-check
         args: [--fix]

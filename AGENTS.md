@@ -1,68 +1,54 @@
-# AGENTS.md — Development Rules
+# AGENTS.md — Repository Guidelines
 
-Permanent rules for humans and AI agents working in this repository. Read this first,
-then `agent/ARCHITECTURE.md`. For a new piece of work, copy `agent/TASK.md`.
+This repository holds take-home assessments, one self-contained folder each. Read this file,
+then the `AGENTS.md` inside the folder you are working on — folder rules win for that folder.
+
+## Layout
+
+```
+<assessment>/          everything for one assessment: code, tests, docs, evidence, Dockerfile, lockfile
+.github/workflows/     one workflow per assessment, path-filtered to its folder
+.claude/skills/        reusable agent workflows (new assessment, requirements audit, release check)
+AGENTS.md CLAUDE.md    these repo-wide rules
+```
+
+Rules for folders:
+- **Self-contained.** An assessment never imports from another. Its own README explains setup
+  from a fresh clone; its own lockfile pins its dependencies.
+- **Reviewer-first.** Each folder has `README.md` (setup + demo path), the write-up the brief asks
+  for (exact filenames and headings from the brief), `COMPLIANCE.md` (every requirement → where it
+  is met → evidence), and whatever evidence the brief requires.
+- **One CI workflow per folder**, triggered only by changes under that folder.
 
 ## Workflow
 
-Every change follows: **Understand → Plan → Implement → Verify → Self-review → Finish**.
+Every change: **Understand → Plan → Implement → Verify → Self-review → Finish.**
 
-1. **Understand** — Read the task, the relevant code, and `agent/ARCHITECTURE.md`. Reproduce
-   bugs before touching code. Ask when requirements are ambiguous; do not guess at intent.
-2. **Plan** — State the smallest change that meets the acceptance criteria. Name files to touch.
-3. **Implement** — Small, focused diffs. Match surrounding style. No drive-by refactors.
-4. **Verify** — `make verify` must pass. Run `make test-e2e` when browser/API behavior changes.
-   Run `make evals` when prompts, model config, or agent decision logic changes.
-5. **Self-review** — Read the full diff as a reviewer: correctness, security, error handling,
-   logging, tests, docs. Remove debug code and dead code.
-6. **Finish** — Summarize what changed, how it was verified, and anything deferred.
+1. **Understand.** Read the brief itself, not a summary. Quote requirements verbatim in
+   `COMPLIANCE.md`; distinguish *must* from *stretch* from *our own additions*.
+2. **Plan.** Smallest change that meets the requirement. Decide what is deliberately cut and say so.
+3. **Implement.** Small diffs matching surrounding style.
+4. **Verify.** The folder's `make verify` and E2E suite. For bugs: reproduce → failing test →
+   root-cause fix → passing test.
+5. **Self-review.** Read the full diff as the reviewer would. Check claims in docs against what
+   the code and evidence actually show — never overstate.
+6. **Finish.** Update `COMPLIANCE.md` and the write-up; state what changed and what was verified.
 
-## Rules
+## Standards
 
-- **Stack:** Python 3.12, FastAPI, Pydantic, Playwright. Manage dependencies with `uv` only
-  (`uv add`, `uv add --dev`); commit `uv.lock`.
-- **Types:** All code passes `mypy --strict`. Validate external data (env, HTTP, files, model
-  output) with Pydantic at the boundary.
-- **Config:** Read settings only through `assessments.config.get_settings()`. New settings go in
-  `Settings` *and* `.env.example`. Tenant credentials are resolved only via
-  `assessments.secrets` (by env var name). Never read `os.environ` elsewhere.
-- **Logging:** Use `logging.getLogger(__name__)`; pass structured data via `extra={...}`.
-  No `print`. Never log secrets, API keys, credentials, or full page content containing PII.
-- **Errors:** Raise `AppError` subclasses for expected failures. Let unexpected exceptions reach
-  the global handler. Never swallow exceptions silently.
-- **Secrets:** Never commit credentials, `.env`, traces, screenshots, or run artifacts.
-  Pre-commit and CI run gitleaks.
-- **Safety:** Every automation action must pass the policy (`safety.py`) and the control guard
-  (`SessionControl.assert_automation`). Never widen allowlists without an explicit requirement.
-- **Artifacts:** `capability/1` is a public contract. Changing its shape needs a schema version
-  bump and an ADR. Artifacts must never contain raw input values, secrets, or transcripts.
-- **Surfaces:** technology-specific code stays behind the `Surface` protocol; the agent loop,
-  replay engine and schema stay surface-neutral.
-- **Architecture docs:** Update `agent/ARCHITECTURE.md` only when the architecture changes (new
-  component, boundary, data flow, or dependency). Record significant decisions as an ADR in
-  `docs/decisions/`.
+- **Honesty over polish.** Evidence must come from real runs. Anything mocked or simulated is
+  labelled as such where it appears.
+- **Secrets never enter git.** `.env` files are ignored; examples use synthetic values. Pre-commit
+  runs gitleaks and private-key detection on every commit.
+- **Go beyond the brief deliberately:** pick additions that answer the evaluator's own priorities
+  (their job descriptions, product, stated evaluation criteria), keep them optional and documented,
+  and never at the expense of a must-have.
+- Commit messages explain *why*. Do not push without the repository owner's go-ahead.
 
-## Testing
+## Skills
 
-- `tests/unit/` — pure logic, no I/O, no network. Fast.
-- `tests/integration/` — components together in-process (e.g. FastAPI app via `TestClient`).
-- `tests/e2e/` — real Chromium + in-process demo bank (discovery with a scripted decider, the
-  replay matrix, handoff, approval). Marked `e2e`, run separately.
-- `evals/` — model-driven behavior. Non-deterministic; never mixed into `pytest` runs.
-- **Regression rule:** reproduce the bug → write a failing test → fix the root cause →
-  confirm the test passes. No fix without a test that would have caught it.
-- No placeholder tests. A test must assert behavior that could actually break.
-- Tests never call real LLM APIs.
-
-## Commands
-
-| Command | Purpose |
+| Skill | Use when |
 | --- | --- |
-| `make install` | Install deps + pre-commit hooks + Playwright Chromium |
-| `make verify` | Format check, lint, typecheck, unit + integration tests |
-| `make test-e2e` | Browser E2E tests |
-| `make fmt` | Auto-format and auto-fix lint |
-| `make audit` | Dependency vulnerability scan |
-| `make up` | Run the stack in Docker |
-| `make demo-bank` / `make discover` / `make replay` | Run the demo target / a discovery / a replay |
-| `uv run python scripts/generate_evidence.py` | Regenerate `/evidence` (needs an API key) |
+| `new-assessment` | Starting a new take-home: scaffold the folder, CI workflow, compliance matrix. |
+| `requirements-audit` | Checking a folder against its brief, line by line, before submitting. |
+| `release-check` | Final pre-submission gate: tests, leak scan, links, CI, evidence freshness. |
