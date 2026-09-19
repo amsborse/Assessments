@@ -8,6 +8,12 @@ They call a real model and are non-deterministic, so they are kept **separate fr
 Status: case format defined and cases written; the runner is deferred (see REPORT.md § Cuts).
 `scripts/generate_evidence.py` is the manual, single-run version of the same check.
 
+Why this matters, from a real run: discovery once stopped and asked for a person because the
+member's name was masked (`█████`) by our own redaction, and the model judged the value
+unreadable. Extraction only records *where* a value is — the value itself is read at replay — so
+the system prompt now says masking is never a reason to ask for help. That is exactly the kind
+of regression `must_not: ["intervention_raised"]` is meant to catch.
+
 ## Layout
 
 | Path | Contents | Committed |
