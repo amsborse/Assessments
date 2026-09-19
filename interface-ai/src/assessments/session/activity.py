@@ -1,7 +1,7 @@
 """Plain-language activity feed for the operator console, from (already redacted) run events.
 
 Each item has a `tone` the console maps to colour: `info` (agent/engine doing its job),
-`success`, `recovered`, `business`, `human`, `danger`, `muted`.
+`success`, `recovered`, `business`, `assisted`, `human`, `danger`, `muted`.
 """
 
 from typing import Any
@@ -32,6 +32,10 @@ def summarize(event: dict[str, Any]) -> dict[str, Any] | None:
             text = f"Started {event.get('kind', 'run')}" + (
                 f": {event['goal']}" if event.get("goal") else f" of {event.get('capability', '')}"
             )
+            if event.get("tenant"):
+                text += f" for tenant {event['tenant']}" + (
+                    f", overlay {event['overlay']}" if event.get("overlay") else ", no overlay"
+                )
         case "decision":
             action = event.get("action") or {}
             if not action:
@@ -70,6 +74,12 @@ def summarize(event: dict[str, Any]) -> dict[str, Any] | None:
                 "failure": "danger",
             }.get(str(state_kind), "info")
             text = f"Detected {event.get('state')} ({state_kind}) → {event.get('response')}"
+        case "assisted_repair":
+            text, tone = (
+                f"Model re-found step {event.get('step')}: “{event.get('chose', '')}”"
+                " (verified; proposed for review, not saved)",
+                "assisted",
+            )
         case "restart":
             text, tone = "Restarting the flow from the beginning", "recovered"
         case "policy" if event.get("verdict") != "allow":

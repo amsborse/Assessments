@@ -128,8 +128,9 @@ def _replay_entry(name: str, title: str, replay: ReplayResult) -> dict[str, Any]
 
 
 def _payload(result: Any) -> Any:
-    """The JSON body of an MCP tool result."""
-    return json.loads(getattr(result.content[0], "text", "null"))
+    """The JSON body of an MCP tool result (a list return arrives as one block per item)."""
+    blocks = [json.loads(getattr(block, "text", "null")) for block in result.content]
+    return blocks[0] if len(blocks) == 1 else blocks
 
 
 def _make_decider(kind: str, capability_id: str) -> Decider:
@@ -232,7 +233,7 @@ async def _beyond(
     )
     transcript = {
         "tools": [t.name for t in await server.list_tools()],
-        "list_capabilities": _payload(listed),
+        "list_capabilities": _payload(listed),  # every capability, not just the first
         "invoke_capability": {
             "request": {"name": ref.split("@")[0], "params": {"member_id": "[redacted]"}},
             "response_status": _payload(invoked)["status"],

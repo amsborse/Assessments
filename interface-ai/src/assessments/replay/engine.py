@@ -150,6 +150,8 @@ class ReplayEngine:
             kind="replay",
             capability=self.cap.ref,
             review=self.cap.review.status,
+            tenant=self.result.tenant,
+            overlay=self.result.overlay,
             params=sorted(raw_params),
             plan=[{"id": st.id, "intent": st.intent} for st in self.cap.steps],
         )

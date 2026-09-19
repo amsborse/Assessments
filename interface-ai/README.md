@@ -8,7 +8,7 @@ console and hands control back.
 
 | Start here | |
 | --- | --- |
-| **Video walkthrough** (3½ min) | [`evidence/demo.mp4`](evidence/demo.mp4) — discovery, replay outcomes, recovery, a person taking over the live session, tenant drift, model repair, certification |
+| **Video walkthrough** (~4 min) | [`evidence/demo.mp4`](evidence/demo.mp4) — the target app, discovery, replay outcomes, recovery, a person taking over the live session, tenant drift; then (tagged *Beyond the brief*) overlays, model repair, certification, MCP and codegen |
 | Design write-up | [`REPORT.md`](REPORT.md) — the seven headings the brief asks for |
 | Requirement-by-requirement check | [`COMPLIANCE.md`](COMPLIANCE.md) — every line of the brief → code, tests, evidence |
 | Evidence (real `claude-opus-5` runs) | [`evidence/`](evidence/) — open [`evidence/index.html`](evidence/index.html) for the colour-coded overview |

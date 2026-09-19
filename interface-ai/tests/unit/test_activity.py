@@ -7,6 +7,22 @@ from assessments.session.activity import run_status, summarize
     ("event", "text", "tone"),
     [
         (
+            {"type": "assisted_repair", "step": "s04", "chose": "Find a Member"},
+            "Model re-found step s04: “Find a Member” (verified; proposed for review, not saved)",
+            "assisted",
+        ),
+        (
+            {
+                "type": "run_started",
+                "kind": "replay",
+                "capability": "x@v1",
+                "tenant": "bayside",
+                "overlay": "bayside (approved)",
+            },
+            "Started replay of x@v1 for tenant bayside, overlay bayside (approved)",
+            "info",
+        ),
+        (
             {
                 "type": "decision",
                 "action": {"tool": "fill", "value": "{{member_id}}", "reason": "enter the member"},

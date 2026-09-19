@@ -126,4 +126,4 @@ The additions map to those words directly:
 | **Live operator console with activity feed** | "human-in-the-loop interfaces": who holds control, what the agent did and why, in real time |
 | **Narrated video + colour-coded evidence** | reviewable in minutes: every outcome class, visibly distinguished |
 | **Code generation** | capabilities as reviewable code for QA teams, independent of this runtime |
-| **Production engineering** | `mypy --strict`, 124 tests (91 unit/integration, 33 browser E2E) incl. regression tests for real bugs found, CI per folder, non-root read-only container, secret scanning |
+| **Production engineering** | `mypy --strict`, 126 tests (93 unit/integration, 33 browser E2E) incl. regression tests for real bugs found, CI per folder, non-root read-only container, secret scanning |
