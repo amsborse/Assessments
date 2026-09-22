@@ -32,12 +32,14 @@ npm run dev
 Vite proxies `/items` to the backend, so the browser sees one origin and the app needs no CORS
 configuration.
 
+Once both have been set up, `.\dev.ps1` (Windows) starts them together, each in its own window.
+
 ## Tests
 
 ```bash
 cd backend
 .venv/Scripts/activate      # Windows; macOS/Linux: source .venv/bin/activate
-pytest                      # 11 API tests, each on a fresh in-memory database
+pytest                      # 13 API tests, each on a fresh in-memory database
 ```
 
 ```bash
@@ -60,7 +62,10 @@ returned in UTC with an explicit offset, so the browser renders it in local time
 | `PATCH` | `/items/{id}` | any subset | `200` updated — only the fields sent change |
 | `DELETE` | `/items/{id}` | — | `204`, `404` if unknown |
 
-Invalid bodies return `422` with FastAPI's field-level detail, which the UI displays as-is.
+Invalid bodies return `422` with FastAPI's field-level detail, which the UI displays as-is. An
+unhandled server error returns `500 {"detail": "Internal server error"}` with the traceback in the
+API log. Every request logs one line there — `POST /items -> 201 (10 ms)` — alongside uvicorn's own
+access log.
 
 ```bash
 curl -X POST http://127.0.0.1:8000/items -H "Content-Type: application/json" -d '{"name":"Coffee","note":"Beans for Monday"}'

@@ -35,11 +35,13 @@ upstart/
 App.tsx / ItemRow.tsx        user action (submit, checkbox, GET, PUT, DELETE)
   → api.ts request()         builds the fetch, returns [data, call] or throws ApiError
   → Vite proxy               /items/* → 127.0.0.1:8000 (same origin in the browser)
+  → log_requests middleware  times the request; catches anything unhandled below it
   → FastAPI route
       ├ get_item dependency  loads the row or raises 404
       └ Pydantic schema      validates the body, else 422 with field detail
   → SQLAlchemy Session (get_db) → SQLite → commit
   → ItemOut JSON
+  → log_requests             logs "<METHOD> <path> -> <status> (<ms>)"
   → App.send()               updates local state, records the call
   → the status line shows "<code> <METHOD> <path>", green on success, red on failure
 ```
@@ -57,6 +59,15 @@ browser would render it as local time — hours off. `ItemOut.stamp_utc` puts th
 way out, which is why every `created_at` ends in `Z`. One serializer covers every route because
 they all return `ItemOut`.
 
+### Logging and unhandled errors
+
+`log_requests` in `main.py` wraps the whole chain, so one place covers every route. `HTTPException`
+(404) and validation failures (422) are turned into responses by FastAPI below the middleware, so
+they are logged with their status like any other call. Anything that escapes a route is logged with
+its traceback and answered `500 {"detail": "Internal server error"}` — the same shape `api.ts`
+already parses, so the UI status line shows it instead of a blank failure. Configuration is
+`logging.basicConfig` at INFO; uvicorn's own access log stays as it is.
+
 ### PUT vs PATCH
 
 `ItemReplace` (PUT) has defaults for every optional field, so `model_dump()` writes them all: an
@@ -68,7 +79,7 @@ the edit form and PATCH for the done checkbox.
 
 | File | Responsibility |
 | --- | --- |
-| `backend/app/main.py` | Routes and HTTP schemas. Add endpoints here; split into a router package only when this file stops fitting on a screen or two. |
+| `backend/app/main.py` | Routes, HTTP schemas, and the request log / error middleware. Add endpoints here; split into a router package only when this file stops fitting on a screen or two. |
 | `backend/app/models.py` | Database shape. `Base.metadata.create_all` in `main.py` creates tables at startup. |
 | `backend/app/db.py` | Engine and the `get_db` dependency — the single seam tests override. |
 | `backend/conftest.py` | Swaps `get_db` for a fresh in-memory SQLite per test. Its location also puts `app` on `sys.path`. |
@@ -81,8 +92,9 @@ the edit form and PATCH for the done checkbox.
 ## Tests
 
 ```bash
-cd backend && pytest          # 11 tests: create, list, read, PUT replace, PATCH partial, delete,
-                              # 404 on every single-item route, validation, UTC timestamps
+cd backend && pytest          # 13 tests: create, list, read, PUT replace, PATCH partial, delete,
+                              # 404 on every single-item route, validation, UTC timestamps,
+                              # the request log line and the 500 path
 cd frontend && npm run build  # tsc type-check + production build
 ```
 

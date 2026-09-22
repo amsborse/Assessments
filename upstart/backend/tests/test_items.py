@@ -1,5 +1,8 @@
 """API tests for the item CRUD slice."""
 
+import logging
+
+import pytest
 from fastapi.testclient import TestClient
 
 
@@ -96,3 +99,26 @@ def test_created_at_is_serialized_as_utc(client: TestClient) -> None:
 
     # The browser must not read a UTC timestamp as local time.
     assert datetime.fromisoformat(created_at).utcoffset().total_seconds() == 0
+
+
+def test_request_is_logged(client: TestClient, caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level(logging.INFO, logger="upstart"):
+        create(client)
+
+    assert "POST /items -> 201" in caplog.text
+
+
+def test_unexpected_error_is_logged_and_returns_500(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    def explode(**_fields: object) -> None:
+        raise RuntimeError("database on fire")
+
+    monkeypatch.setattr("app.main.Item", explode)
+
+    with caplog.at_level(logging.ERROR, logger="upstart"):
+        response = client.post("/items", json={"name": "Coffee"})
+
+    assert response.status_code == 500
+    assert response.json() == {"detail": "Internal server error"}
+    assert "database on fire" in caplog.text

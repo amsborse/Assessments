@@ -1,84 +1,128 @@
-# AGENTS.md — Development Rules
+## Autonomy
 
-Rules for humans and AI agents working in this folder. This file is the authority for everything
-under `upstart/`; there is no repository-wide rules file. Read `agent/ARCHITECTURE.md` before
-changing anything.
+Default to action, not questions.
 
-This folder is an interview boilerplate for Upstart: one vertical slice, kept small enough to extend
-live in 60 minutes. Its value is that a reviewer can read all of it. Protect that. It is also
-self-contained — it never imports from another folder in this repository, and `README.md` explains
-setup from a fresh clone.
+Once the human has specified the goal and important design decisions:
+- inspect the repo
+- infer implementation details from existing patterns
+- implement the change
+- add focused tests
+- run relevant tests
+- review your own diff
+- fix straightforward issues you discover
 
-## Workflow
+Do not ask for confirmation for:
+- file selection
+- naming that follows existing conventions
+- straightforward implementation details
+- test structure
+- minor refactoring required for the change
+- error handling clearly implied by existing patterns
+- mechanical database/API/UI changes
+- fixing obvious bugs introduced by your changes
 
-Every change follows: **Understand → Plan → Implement → Verify → Self-review → Finish**.
+Use reasonable defaults when the choice is low-risk and reversible.
 
-1. **Understand** — Read the request and the code it touches. Reproduce bugs before fixing them.
-   Ask when the requirement is ambiguous; do not guess at intent.
-2. **Plan** — State the smallest change that meets the requirement and name the files to touch.
-3. **Implement** — Small, focused diffs in the surrounding style. No drive-by refactors.
-4. **Verify** — `pytest` passes and `npm run build` passes. Exercise the UI path by hand when it
-   changed.
-5. **Self-review** — Read the whole diff as the reviewer: correctness, validation, error handling,
-   tests, docs. Delete debug and dead code.
-6. **Finish** — Say what changed, how it was verified, and what was deliberately left out.
+## Escalation
 
-## Rules
+Stop and ask the human ONLY when you encounter a decision that is:
 
-- **Scope.** Build what was asked, nothing adjacent. No auth, Docker, caching, queues, search,
-  pagination, or WebSockets until a requirement asks for them.
-- **No speculative structure.** No interface with one implementation, no config for a value that
-  never changes, no file created "for later". Routes live in `main.py` until there are enough to
-  split.
-- **Stack.** FastAPI + SQLAlchemy 2.0 (typed `Mapped[...]`) + SQLite; React 19 + TypeScript
-  (`strict`) + Vite. Pin new backend dependencies in `requirements.txt`. Add a dependency only when
-  a few lines cannot do the job.
-- **Validation at the boundary.** Every request body is a Pydantic model; let FastAPI return 422.
-  Never trust the client to have validated. Surface the API's message in the UI — never swallow a
-  failed response or replace it with a generic string.
-- **Verb semantics.** `PUT` replaces the whole resource (omitted fields reset to their default),
-  `PATCH` changes only the fields present (`exclude_unset=True`), `DELETE` returns 204. A missing
-  id is 404 from the shared `get_item` dependency, not a per-route check.
-- **Database access.** Only through the `get_db` dependency, so tests can override it. No module
-  level sessions, no session passed around by hand.
-- **Frontend.** All HTTP goes through `src/api.ts` — components never call `fetch` and never build
-  a URL. Keep state in the component that uses it; `useState`/`useEffect` are enough at this size.
-  No state library, no data-fetching library, no CSS framework.
-- **Styling.** Colors, spacing and radii come from the tokens at the top of `src/index.css`, and
-  every token has a dark-mode value. Keyboard focus stays visible; no `outline: none`.
-- **Motion.** CSS only — transitions plus the two keyframes in `index.css`, no animation library and
-  no animation state in components. Animate `opacity`, `transform` and colors, never width, height
-  or margins. Keep it under 200ms, only in response to a user action, and keep the
-  `prefers-reduced-motion` block at the bottom of the file working.
-- **Dialogs.** Never `window.confirm`/`alert` for destructive actions — arm the control in place
-  (see the two-step delete in `ItemRow.tsx`).
-- **Docs.** Update `README.md` when a command changes and `agent/ARCHITECTURE.md` when a component,
-  boundary or flow changes. Never describe behavior the code does not have.
-- **Honesty over polish.** Never let the README or `ARCHITECTURE.md` claim behavior the code does
-  not have. A deliberate gap is documented as a gap.
-- **Secrets.** Never commit credentials, `.env` files, or `app.db`. Pre-commit runs gitleaks and
-  private-key detection on every commit.
-- **Commits.** The message explains *why*. Do not push without the repository owner's go-ahead.
-- **Shortcuts.** A deliberate simplification with a known ceiling gets a comment naming the ceiling
-  and the upgrade path (see `create_all` in `app/main.py`).
+1. Product-significant
+   - unclear expected behavior
+   - conflicting requirements
+   - introducing a new business rule
 
-## Testing
+2. Architecture-significant
+   - new datastore
+   - new framework/dependency
+   - major abstraction
+   - changing established architecture
 
-- Tests live in `backend/tests/` and go through the API with `TestClient` — that is what the
-  reviewer cares about. Each test gets a fresh in-memory database from the `client` fixture.
-- Test behavior that can break: status codes, persisted values, validation rejections. No
-  placeholder tests, no asserting that a mock was called.
-- **Regression rule:** reproduce the bug → write a failing test → fix the root cause → watch it
-  pass. No fix without a test that would have caught it.
-- The UI stays test-free while it is one component; if it grows logic, add Vitest and say so here.
+3. Contract-significant
+   - API shape is materially ambiguous
+   - backward-incompatible API behavior
+   - authentication/authorization assumptions
 
-## Commands
+4. Data-significant
+   - destructive migration
+   - unclear relationship/cardinality
+   - possible data loss
+   - uncertain migration behavior for existing records
 
-| Command | Purpose |
-| --- | --- |
-| `cd backend && uvicorn app.main:app --reload --port 8000` | Run the API |
-| `cd backend && pytest` | Backend tests |
-| `cd frontend && npm run dev` | Run the UI (proxies `/items` to the API) |
-| `cd frontend && npm run build` | Type-check and production build |
+5. Scope-significant
+   - implementation requires substantially more work than requested
+   - change unexpectedly affects unrelated features
 
-Changing `app/models.py` means deleting `backend/app.db` — there are no migrations yet.
+Otherwise, make the reasonable engineering choice and continue.
+
+## Missing Decisions
+
+If the human's prompt misses something important:
+
+- If existing repository conventions clearly answer it → follow them.
+- If there is an obvious safe/reversible default → use it and mention the assumption afterward.
+- If it materially changes product behavior, architecture, API contract, or persisted data → ask one concise question.
+- Do not ask multiple speculative questions before starting.
+
+## Execution
+
+For a normal bounded task:
+
+1. Inspect relevant code.
+2. Briefly state the implementation plan.
+3. Implement immediately.
+4. Add focused tests.
+5. Run tests.
+6. Inspect your own diff.
+7. Fix obvious issues.
+8. Report:
+   - what changed
+   - tests run
+   - assumptions made
+   - anything the human should review
+
+Do not wait for approval between these steps unless an escalation condition is encountered.
+
+## Interview Time Management
+
+Assume time is limited.
+
+Prefer completing a working, tested vertical slice over exhaustive analysis.
+
+Do not:
+- over-plan
+- produce long explanations before coding
+- ask questions that can be answered by inspecting the repository
+- ask the human to make trivial implementation decisions
+- repeatedly ask for permission to continue
+
+If there is ambiguity but it is safe to proceed, state the assumption briefly and continue.
+
+Example:
+
+"Assumption: following the existing API convention, I'll return 404 for an
+unknown application ID. Proceeding with that behavior."
+
+Then implement it.
+
+## Human Control
+
+The human owns:
+- requirement prioritization
+- product behavior
+- major architecture
+- API contracts
+- data-model relationships
+- important tradeoffs
+
+The agent owns:
+- repository exploration
+- mechanical implementation
+- following existing patterns
+- writing focused tests
+- running tests
+- debugging implementation failures
+- routine code-quality improvements
+
+The agent should make the human faster, not turn the human into an approval
+button.

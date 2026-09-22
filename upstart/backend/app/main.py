@@ -1,8 +1,12 @@
 """FastAPI app: CRUD over items — the slice the UI drives end to end."""
 
+import logging
+import time
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
 
-from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_serializer
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -15,6 +19,37 @@ from app.models import Item
 Base.metadata.create_all(engine)
 
 app = FastAPI(title="Upstart Items")
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)-8s %(name)s: %(message)s")
+log = logging.getLogger("upstart")
+
+
+@app.middleware("http")
+async def log_requests(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    """One line per request, and the last resort for whatever a route did not catch.
+
+    Wrapping the chain here means no route repeats it: 404 and 422 have already
+    become responses further down and are logged with their status, while an
+    unexpected exception is logged with its traceback and answered with the same
+    `{"detail": ...}` shape the client parses for every other failure.
+    """
+    started = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        log.exception("%s %s -> 500", request.method, request.url.path)
+        return JSONResponse({"detail": "Internal server error"}, status_code=500)
+    log.info(
+        "%s %s -> %s (%.0f ms)",
+        request.method,
+        request.url.path,
+        response.status_code,
+        (time.perf_counter() - started) * 1000,
+    )
+    return response
+
 
 Name = Field(min_length=1, max_length=100)
 Note = Field(default=None, max_length=500)
