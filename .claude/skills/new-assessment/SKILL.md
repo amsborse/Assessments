@@ -31,7 +31,7 @@ that is clearly better than the median submission.
   README.md        setup from a fresh clone, demo path with exact commands
   <WRITEUP>.md     exactly the filename + headings the brief asks for
   COMPLIANCE.md    requirement → where met → evidence (links), plus beyond-the-brief
-  AGENTS.md CLAUDE.md   folder-specific rules (stack, commands, testing layers)
+  AGENTS.md CLAUDE.md   the rules for this folder — authoritative, no repo-wide file above it
   src/ tests/{unit,integration,e2e}/ evidence/ docs/
   pyproject.toml (or package.json) + lockfile, Makefile with verify/test-e2e, Dockerfile if useful
 ```
@@ -44,4 +44,4 @@ that is clearly better than the median submission.
 
 Present: architecture sketch, the requirements table, depth choices mapped to evaluation
 criteria, differentiators, and explicit cuts. Then implement incrementally, verifying after
-each step (see root `AGENTS.md`).
+each step (the workflow the new folder's own `AGENTS.md` sets out).

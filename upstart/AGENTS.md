@@ -1,10 +1,13 @@
 # AGENTS.md — Development Rules
 
-Rules for humans and AI agents working in this folder. The repository-wide rules in `../AGENTS.md`
-also apply. Read `agent/ARCHITECTURE.md` before changing anything.
+Rules for humans and AI agents working in this folder. This file is the authority for everything
+under `upstart/`; there is no repository-wide rules file. Read `agent/ARCHITECTURE.md` before
+changing anything.
 
-This folder is an interview boilerplate: one vertical slice, kept small enough to extend live in
-60 minutes. Its value is that a reviewer can read all of it. Protect that.
+This folder is an interview boilerplate for Upstart: one vertical slice, kept small enough to extend
+live in 60 minutes. Its value is that a reviewer can read all of it. Protect that. It is also
+self-contained — it never imports from another folder in this repository, and `README.md` explains
+setup from a fresh clone.
 
 ## Workflow
 
@@ -51,7 +54,11 @@ Every change follows: **Understand → Plan → Implement → Verify → Self-re
   (see the two-step delete in `ItemRow.tsx`).
 - **Docs.** Update `README.md` when a command changes and `agent/ARCHITECTURE.md` when a component,
   boundary or flow changes. Never describe behavior the code does not have.
-- **Secrets.** Never commit credentials, `.env` files, or `app.db`.
+- **Honesty over polish.** Never let the README or `ARCHITECTURE.md` claim behavior the code does
+  not have. A deliberate gap is documented as a gap.
+- **Secrets.** Never commit credentials, `.env` files, or `app.db`. Pre-commit runs gitleaks and
+  private-key detection on every commit.
+- **Commits.** The message explains *why*. Do not push without the repository owner's go-ahead.
 - **Shortcuts.** A deliberate simplification with a known ceiling gets a comment naming the ceiling
   and the upgrade path (see `create_all` in `app/main.py`).
 

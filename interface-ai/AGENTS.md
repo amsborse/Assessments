@@ -1,22 +1,36 @@
 # AGENTS.md — Development Rules
 
-Rules for humans and AI agents working in this folder (the interface.ai assessment). The
-repository-wide rules in `../AGENTS.md` also apply. Read `agent/ARCHITECTURE.md` next; for a new
-piece of work, copy `agent/TASK.md`. Keep `COMPLIANCE.md` true whenever behavior changes.
+Rules for humans and AI agents working in this folder — the interface.ai take-home. This file is
+the authority for everything under `interface-ai/`; there is no repository-wide rules file. Read
+`agent/ARCHITECTURE.md` next; for a new piece of work, copy `agent/TASK.md`. Keep `COMPLIANCE.md`
+true whenever behavior changes.
+
+## The folder
+
+- **Self-contained.** Never import from another assessment folder. `README.md` explains setup from
+  a fresh clone; `uv.lock` pins the dependencies; `.github/workflows/interface-ai.yml` is this
+  folder's only CI workflow and is path-filtered to it.
+- **Reviewer-first.** The folder carries `README.md` (setup + demo path), `REPORT.md` (the exact
+  filename and headings the brief asks for), `COMPLIANCE.md` (every requirement → where it is met →
+  evidence), and the evidence the brief requires under `evidence/`.
 
 ## Workflow
 
 Every change follows: **Understand → Plan → Implement → Verify → Self-review → Finish**.
 
-1. **Understand** — Read the task, the relevant code, and `agent/ARCHITECTURE.md`. Reproduce
-   bugs before touching code. Ask when requirements are ambiguous; do not guess at intent.
-2. **Plan** — State the smallest change that meets the acceptance criteria. Name files to touch.
+1. **Understand** — Read the brief itself, not a summary, plus the relevant code and
+   `agent/ARCHITECTURE.md`. Quote requirements verbatim in `COMPLIANCE.md` and distinguish *must*
+   from *stretch* from *our own additions*. Reproduce bugs before touching code. Ask when
+   requirements are ambiguous; do not guess at intent.
+2. **Plan** — State the smallest change that meets the acceptance criteria. Name files to touch,
+   and say what is deliberately cut.
 3. **Implement** — Small, focused diffs. Match surrounding style. No drive-by refactors.
 4. **Verify** — `make verify` must pass. Run `make test-e2e` when browser/API behavior changes.
    Run `make evals` when prompts, model config, or agent decision logic changes.
 5. **Self-review** — Read the full diff as a reviewer: correctness, security, error handling,
    logging, tests, docs. Remove debug code and dead code.
-6. **Finish** — Summarize what changed, how it was verified, and anything deferred.
+6. **Finish** — Update `COMPLIANCE.md` and the write-up. Summarize what changed, how it was
+   verified, and anything deferred.
 
 ## Rules
 
@@ -31,8 +45,14 @@ Every change follows: **Understand → Plan → Implement → Verify → Self-re
   No `print`. Never log secrets, API keys, credentials, or full page content containing PII.
 - **Errors:** Raise `AppError` subclasses for expected failures. Let unexpected exceptions reach
   the global handler. Never swallow exceptions silently.
-- **Secrets:** Never commit credentials, `.env`, traces, screenshots, or run artifacts.
-  Pre-commit and CI run gitleaks.
+- **Honesty over polish:** Evidence comes from real runs. Anything mocked or simulated is labelled
+  as such where it appears. Never let a doc claim more than the code and evidence show.
+- **Beyond the brief:** Go further deliberately — pick additions that answer the evaluator's own
+  priorities (their job descriptions, product, stated evaluation criteria), keep them optional and
+  documented, and never at the expense of a must-have.
+- **Secrets:** Never commit credentials, `.env`, traces, screenshots, or run artifacts. Examples use
+  synthetic values. Pre-commit and CI run gitleaks and private-key detection.
+- **Commits:** The message explains *why*. Do not push without the repository owner's go-ahead.
 - **Safety:** Every automation action must pass the policy (`safety.py`) and the control guard
   (`SessionControl.assert_automation`). Never widen allowlists without an explicit requirement.
 - **Artifacts:** `capability/1` is a public contract. Changing its shape needs a schema version
@@ -54,6 +74,13 @@ Every change follows: **Understand → Plan → Implement → Verify → Self-re
   confirm the test passes. No fix without a test that would have caught it.
 - No placeholder tests. A test must assert behavior that could actually break.
 - Tests never call real LLM APIs.
+
+## Skills
+
+| Skill | Use when |
+| --- | --- |
+| `requirements-audit` | Checking this folder against the brief, line by line, before submitting. |
+| `release-check` | Final pre-submission gate: tests, leak scan, links, CI, evidence freshness. |
 
 ## Commands
 
